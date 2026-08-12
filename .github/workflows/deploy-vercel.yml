@@ -1,0 +1,42 @@
+name: Deploy Dashboard to Vercel
+
+on:
+  push:
+    paths:
+      - "config/instance-url.json"
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Read tunnel URL
+        id: url
+        run: |
+          URL=$(node -e "console.log(require('./config/instance-url.json').url)")
+          echo "Tunnel URL: $URL"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+
+      - name: Update NEXT_PUBLIC_API_URL (production)
+        working-directory: dashboard
+        run: |
+          npx --yes vercel env rm NEXT_PUBLIC_API_URL production --yes --token "${{ secrets.VERCEL_TOKEN }}" || true
+          echo "${{ steps.url.outputs.url }}" | npx --yes vercel env add NEXT_PUBLIC_API_URL production --token "${{ secrets.VERCEL_TOKEN }}"
+
+      - name: Deploy to production
+        working-directory: dashboard
+        run: |
+          npx --yes vercel deploy --prod --yes --token "${{ secrets.VERCEL_TOKEN }}"
