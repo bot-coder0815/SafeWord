@@ -17,7 +17,7 @@ services:
       retries: 10
 
   api:
-    image: wordlock-api:latest
+    image: safeword-api:latest
     pull_policy: never
     container_name: wordlock-api
     restart: unless-stopped
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
 
   bot:
-    image: wordlockbot:latest
+    image: safewordbot:latest
     pull_policy: never
     container_name: wordlockbot
     restart: unless-stopped
@@ -67,7 +67,7 @@ services:
         condition: service_started
 
   tunnel-watcher:
-    image: wordlock-tunnel-watcher:latest
+    image: safeword-tunnel-watcher:latest
     pull_policy: never
     container_name: wordlock-tunnel-watcher
     restart: unless-stopped
