@@ -224,6 +224,16 @@ class SafeWordBot(commands.Bot):
     async def on_ready(self) -> None:
         self.start_time = asyncio.get_event_loop().time()
         log.info("Logged in as %s (v%s)", self.user, self.version)
+        log.info(
+            "DIAGNOSTIC: Message Content Intent = %s | in %d guild(s)",
+            bool(self.intents.message_content),
+            len(self.guilds),
+        )
+        log.info(
+            "DIAGNOSTIC: filter is ACTIVE. Standard + custom words are matched. "
+            "NOTE: server owners and admins are intentionally NEVER filtered — "
+            "test with a normal member account."
+        )
         await self.change_presence(
             activity=discord.Activity(
                 type=discord.ActivityType.watching, name="safewordbot.vercel.app"

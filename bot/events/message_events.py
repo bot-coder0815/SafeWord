@@ -143,8 +143,10 @@ class MessageEvents(commands.Cog):
         if not message.guild:
             return
         if not message.content:
-            log.debug(
-                "Guild %s: empty content (author %s) — Message Content Intent off?",
+            log.warning(
+                "Guild %s: empty content for author %s — if this is a real message, "
+                "the Message Content Intent is OFF in the Discord Developer Portal "
+                "(or the author is a webhook/bot).",
                 message.guild.id,
                 message.author.id,
             )
@@ -273,8 +275,18 @@ class MessageEvents(commands.Cog):
         if member is None:
             return False
         if member.id == message.guild.owner_id:
+            log.info(
+                "Guild %s: message from server OWNER skipped (owner is never filtered). "
+                "Test with a normal member account to see the filter working.",
+                message.guild.id,
+            )
             return True
         if member.guild_permissions.administrator:
+            log.info(
+                "Guild %s: message from ADMIN skipped (administrators are never filtered). "
+                "Test with a normal member account to see the filter working.",
+                message.guild.id,
+            )
             return True
         try:
             bypass_users = server.get("bypass_users") or []
