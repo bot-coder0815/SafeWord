@@ -18,27 +18,37 @@ function buildTree(members: TeamMember[]): Map<number | null, TeamMember[]> {
   return map;
 }
 
-function TeamNode({ member, members }: { member: TeamMember; members: TeamMember[] }) {
+function TeamNode({
+  member,
+  members,
+  withStub = false,
+}: {
+  member: TeamMember;
+  members: TeamMember[];
+  withStub?: boolean;
+}) {
   const tree = buildTree(members);
   const children = tree.get(member.id) ?? [];
   return (
-    <li>
-      <div className="flex flex-col items-center gap-2">
-        <div className="rounded-xl border border-blurple/40 bg-discord px-4 py-3 text-center shadow-lg">
-          <div className="text-sm font-semibold text-white">{member.name}</div>
-          <div className="mt-0.5 text-xs text-blurple">{member.role}</div>
-        </div>
-        {children.length > 0 && (
-          <>
-            <div className="h-4 w-px bg-blurple/40" />
-            <ul className="flex flex-wrap justify-center gap-6 border-t border-blurple/30 pt-4">
+    <li className="flex flex-col items-center">
+      {withStub && <div className="h-6 w-px bg-blurple/40" />}
+      <div className="rounded-xl border border-blurple/40 bg-discord px-5 py-3 text-center shadow-lg">
+        <div className="text-sm font-semibold text-white">{member.name}</div>
+        <div className="mt-0.5 text-xs text-blurple">{member.role}</div>
+      </div>
+      {children.length > 0 && (
+        <>
+          <div className="h-6 w-px bg-blurple/40" />
+          <div className="relative w-full">
+            <div className="absolute left-0 right-0 top-0 h-px bg-blurple/40" />
+            <ul className="flex items-start justify-center gap-6 px-6">
               {children.map((c) => (
-                <TeamNode key={c.id} member={c} members={members} />
+                <TeamNode key={c.id} member={c} members={members} withStub />
               ))}
             </ul>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </li>
   );
 }
@@ -77,6 +87,9 @@ export default function LandingPage() {
           SafeWord
         </div>
         <div className="flex items-center gap-3">
+          <a href="#team" className="hidden text-sm font-medium text-gray-300 transition hover:text-white sm:block">
+            {t("landing.team")}
+          </a>
           <LangSwitcher />
           {url ? (
             <a href={url} className="btn-primary">

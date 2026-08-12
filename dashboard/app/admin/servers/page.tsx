@@ -48,24 +48,36 @@ export default function AdminServers() {
   }, [loading, servers.length]);
 
   const setStatus = async (gid: number, status: string) => {
-    await api(`/api/admin/servers/${gid}`, {
-      method: "PATCH",
-      body: JSON.stringify({ status }),
-    });
-    reload();
+    try {
+      await api(`/api/admin/servers/${gid}`, {
+        method: "PATCH",
+        body: JSON.stringify({ status }),
+      });
+      reload();
+    } catch (e) {
+      alert((e as Error).message);
+    }
   };
 
   const kickBot = async (s: AdminServer) => {
     if (!window.confirm(`${t("adServ.kickConfirm")} "${s.name || s.guild_id}"?`)) return;
-    await api(`/api/admin/servers/${s.guild_id}/kick`, { method: "POST" });
-    reload();
+    try {
+      await api(`/api/admin/servers/${s.guild_id}/kick`, { method: "POST" });
+      reload();
+    } catch (e) {
+      alert((e as Error).message);
+    }
   };
 
   const refreshInvite = async (s: AdminServer) => {
-    const res = await api<InviteInfo>(`/api/admin/servers/${s.guild_id}/invite`, {
-      method: "POST",
-    });
-    setInvites((prev) => ({ ...prev, [s.guild_id]: res }));
+    try {
+      const res = await api<InviteInfo>(`/api/admin/servers/${s.guild_id}/invite`, {
+        method: "POST",
+      });
+      setInvites((prev) => ({ ...prev, [s.guild_id]: res }));
+    } catch (e) {
+      alert((e as Error).message);
+    }
   };
 
   const copyInvite = async (s: AdminServer) => {

@@ -206,6 +206,12 @@ class Database:
         )
         async with self._pool.acquire() as conn:
             await conn.execute(_SCHEMA)
+            count = await conn.fetchval("SELECT COUNT(*) FROM team_members")
+            if count == 0:
+                await conn.execute(
+                    "INSERT INTO team_members (name, role, sort_order) "
+                    "VALUES ('DevCoder', 'Owner/Head developer', 0)"
+                )
     async def close(self) -> None:
         if self._pool:
             await self._pool.close()
