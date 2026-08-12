@@ -20,6 +20,7 @@ services:
 
   api:
     image: safeword-api:latest
+    pull_policy: never
     container_name: safeword-api
     restart: unless-stopped
     environment: &common
@@ -48,6 +49,7 @@ services:
 
   bot:
     image: safewordbot:latest
+    pull_policy: never
     container_name: safewordbot
     restart: unless-stopped
     environment: *common
