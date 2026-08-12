@@ -18,9 +18,7 @@ services:
       retries: 10
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
+    image: safeword-api:latest
     container_name: safeword-api
     restart: unless-stopped
     env_file: .env
@@ -33,9 +31,6 @@ services:
       - "8000:8000"
 
   bot:
-    build:
-      context: .
-      dockerfile: Dockerfile.bot
     image: safewordbot:latest
     container_name: safewordbot
     restart: unless-stopped

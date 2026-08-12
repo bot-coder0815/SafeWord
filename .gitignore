@@ -22,6 +22,9 @@ npm-debug.log*
 pgdata/
 .pytest_cache/
 
+# Offline-Bundle (Images sind riesig)
+transfer/*.tar.gz
+
 # OS / editor
 .DS_Store
 .idea/
