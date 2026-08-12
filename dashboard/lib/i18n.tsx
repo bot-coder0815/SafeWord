@@ -153,7 +153,9 @@ const de = {
 
   // bypass
   "settings.bypass": "Bypass",
-  "settings.bypassDesc": "Rollen und Benutzer, die niemals gefiltert werden. Serverbesitzer und Administratoren sind immer ausgenommen.",
+  "settings.bypassDesc": "Rollen und Benutzer, die niemals gefiltert werden. Serverbesitzer und Administratoren werden normalerweise gefiltert – nur mit dem „Cheat“-Schalter unten bleiben sie ausgenommen.",
+  "settings.bypassPrivileged": "Admins/Owner von Filter ausnehmen (Cheat)",
+  "settings.bypassPrivilegedDesc": "Wenn aktiv, werden Serverbesitzer und Administratoren auf DIESEM Server nicht gefiltert. Standardmäßig aus – sonst würden deren Nachrichten mitgefiltert.",
   "settings.bypassRoles": "Bypass-Rollen (IDs, kommasepariert)",
   "settings.bypassUsers": "Bypass-Benutzer (IDs, kommasepariert)",
   "settings.bypassPlaceholder": "z.B. 123456789012345678, 234567890123456789",
@@ -493,7 +495,9 @@ const en: Record<string, string> = {
 
   // bypass
   "settings.bypass": "Bypass",
-  "settings.bypassDesc": "Roles and users that are never filtered. Server owners and administrators are always exempt.",
+  "settings.bypassDesc": "Roles and users that are never filtered. Server owners and administrators are filtered by default – only the \"Cheat\" toggle below exempts them.",
+  "settings.bypassPrivileged": "Exclude Admins/Owner (Cheat)",
+  "settings.bypassPrivilegedDesc": "When enabled, server owners and administrators on THIS server are not filtered. Off by default – otherwise their messages would be filtered too.",
   "settings.bypassRoles": "Bypass roles (IDs, comma-separated)",
   "settings.bypassUsers": "Bypass users (IDs, comma-separated)",
   "settings.bypassPlaceholder": "e.g. 123456789012345678, 234567890123456789",

@@ -269,25 +269,32 @@ class MessageEvents(commands.Cog):
         return actions
 
     async def _is_bypassed(self, message: discord.Message, server: dict) -> bool:
-        """Server-side bypass: guild owners, whitelisted users and roles are
-        never filtered."""
+        """Server-side bypass.
+
+        Owners and administrators are filtered by default. The only exception
+        is the per-server "cheat" flag ``bypass_privileged`` (set in the admin
+        panel for a specific server), which stops the filter from touching
+        owners/admins on that server. Individual users and roles can still be
+        whitelisted via ``bypass_users`` / ``bypass_roles``.
+        """
         member = message.guild.get_member(message.author.id)
         if member is None:
             return False
-        if member.id == message.guild.owner_id:
-            log.info(
-                "Guild %s: message from server OWNER skipped (owner is never filtered). "
-                "Test with a normal member account to see the filter working.",
-                message.guild.id,
-            )
-            return True
-        if member.guild_permissions.administrator:
-            log.info(
-                "Guild %s: message from ADMIN skipped (administrators are never filtered). "
-                "Test with a normal member account to see the filter working.",
-                message.guild.id,
-            )
-            return True
+        if server.get("bypass_privileged"):
+            if member.id == message.guild.owner_id:
+                log.info(
+                    "Guild %s: message from server OWNER skipped "
+                    "(bypass_privileged cheat enabled).",
+                    message.guild.id,
+                )
+                return True
+            if member.guild_permissions.administrator:
+                log.info(
+                    "Guild %s: message from ADMIN skipped "
+                    "(bypass_privileged cheat enabled).",
+                    message.guild.id,
+                )
+                return True
         try:
             bypass_users = server.get("bypass_users") or []
             if isinstance(bypass_users, str):

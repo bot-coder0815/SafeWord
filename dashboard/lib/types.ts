@@ -32,6 +32,7 @@ export interface ServerConfig {
   default_lists: Record<string, boolean>;
   bypass_roles: string[];
   bypass_users: string[];
+  bypass_privileged: boolean;
   bot_version: string | null;
   member_count: number;
 }

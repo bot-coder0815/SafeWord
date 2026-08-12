@@ -47,6 +47,7 @@ export default function GuildSettings() {
         action_log: cfg.action_log,
         bypass_roles: asArray(cfg.bypass_roles),
         bypass_users: asArray(cfg.bypass_users),
+        bypass_privileged: cfg.bypass_privileged,
       }),
     });
     setSaved(true);
@@ -172,6 +173,25 @@ export default function GuildSettings() {
         <div className="card">
           <h2 className="mb-4 text-lg font-semibold text-white">{t("settings.bypass")}</h2>
           <p className="mb-4 text-sm text-gray-400">{t("settings.bypassDesc")}</p>
+          <div className="mb-4 flex items-center justify-between rounded-lg bg-white/5 px-4 py-3">
+            <div>
+              <div className="font-medium text-white">{t("settings.bypassPrivileged")}</div>
+              <div className="text-xs text-gray-400">{t("settings.bypassPrivilegedDesc")}</div>
+            </div>
+            <button
+              onClick={() => setCfg({ ...cfg, bypass_privileged: !cfg.bypass_privileged })}
+              className={`relative h-6 w-11 rounded-full transition ${
+                cfg.bypass_privileged ? "bg-safeword-green" : "bg-white/10"
+              }`}
+              aria-label={t("settings.bypassPrivileged")}
+            >
+              <span
+                className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
+                  cfg.bypass_privileged ? "left-[22px]" : "left-0.5"
+                }`}
+              />
+            </button>
+          </div>
           <div className="space-y-4">
             <div>
               <label className="label">{t("settings.bypassRoles")}</label>
