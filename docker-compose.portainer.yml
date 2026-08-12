@@ -53,5 +53,15 @@ services:
       db:
         condition: service_healthy
 
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    pull_policy: never
+    container_name: safeword-tunnel
+    restart: unless-stopped
+    command: tunnel --url http://safeword-api:8000 --no-autoupdate
+    depends_on:
+      api:
+        condition: service_started
+
 volumes:
   pgdata:
