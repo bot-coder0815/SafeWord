@@ -29,7 +29,7 @@ class SafeWordBot(commands.Bot):
             intents=intents,
             help_command=None,
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name="Made by DevCoder"
+                type=discord.ActivityType.watching, name="safewordbot.vercel.app"
             ),
         )
         self.version = __version__
@@ -84,13 +84,13 @@ class SafeWordBot(commands.Bot):
         log.info("Commands synced")
 
     async def _presence_loop(self) -> None:
-        """Keep the activity set to 'Made by DevCoder' at all times."""
+        """Keep the activity set to 'safewordbot.vercel.app' at all times."""
         await self.wait_until_ready()
         while not self.is_closed():
             try:
                 await self.change_presence(
                     activity=discord.Activity(
-                        type=discord.ActivityType.watching, name="Made by DevCoder"
+                        type=discord.ActivityType.watching, name="safewordbot.vercel.app"
                     )
                 )
             except Exception:
@@ -224,7 +224,7 @@ class SafeWordBot(commands.Bot):
         log.info("Logged in as %s (v%s)", self.user, self.version)
         await self.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name="Made by DevCoder"
+                type=discord.ActivityType.watching, name="safewordbot.vercel.app"
             )
         )
         for guild in self.guilds:
