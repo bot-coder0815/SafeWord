@@ -688,6 +688,14 @@ class Database:
             "SELECT * FROM push_subscriptions WHERE user_id = $1", user_id
         )
 
+    async def admin_push_subscriptions(self) -> List[dict]:
+        """All push subscriptions belonging to SafeWord staff (owner/developer/moderator)."""
+        return await self._fetch(
+            "SELECT ps.* FROM push_subscriptions ps "
+            "JOIN users u ON u.discord_id = ps.user_id "
+            "WHERE u.role IN ('owner', 'developer', 'moderator')"
+        )
+
     async def remove_push_subscription(self, user_id: int, endpoint: str) -> None:
         await self._execute(
             "DELETE FROM push_subscriptions WHERE user_id = $1 AND endpoint = $2",

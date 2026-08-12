@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import {
   LayoutDashboard,
@@ -8,6 +9,7 @@ import {
   ArrowLeft,
   UserRound,
   ShieldAlert,
+  Menu,
 } from "lucide-react";
 import Link from "next/link";
 import { Sidebar, type SidebarItem } from "@/components/Sidebar";
@@ -16,6 +18,7 @@ import { useI18n } from "@/lib/i18n";
 export default function GuildLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
   const { t } = useI18n();
+  const [navOpen, setNavOpen] = useState(false);
   const guildId = (params?.guildId as string) ?? "";
   const base = `/dashboard/${guildId}`;
 
@@ -29,9 +32,16 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar title={t("guild.sidebarTitle")} items={items} />
+      <Sidebar title={t("guild.sidebarTitle")} items={items} open={navOpen} onClose={() => setNavOpen(false)} />
       <div className="flex-1 overflow-y-auto">
-        <div className="border-b border-white/5 bg-discord px-6 py-3">
+        <div className="flex items-center gap-3 border-b border-white/5 bg-discord px-4 py-3 lg:px-6">
+          <button
+            onClick={() => setNavOpen(true)}
+            className="rounded-lg p-1.5 text-gray-400 hover:bg-white/5 hover:text-white lg:hidden"
+            aria-label={t("common.menu")}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
           <Link
             href="/dashboard"
             className="inline-flex items-center gap-1 text-xs text-gray-400 hover:text-white"
@@ -39,7 +49,7 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
             <ArrowLeft className="h-3 w-3" /> {t("guild.allServers")}
           </Link>
         </div>
-        <div className="p-6 lg:p-10">{children}</div>
+        <div className="p-4 lg:p-10">{children}</div>
       </div>
     </div>
   );

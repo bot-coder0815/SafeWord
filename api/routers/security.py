@@ -152,3 +152,16 @@ async def push_test(request: Request):
             detail="No push subscription found. Enable notifications first.",
         )
     return {"ok": True, "sent": sent}
+
+
+@router.post("/api/admin/push/test")
+async def admin_push_test(request: Request, _user=Depends(auth.require_admin)):
+    """Send a test push notification to every SafeWord admin device."""
+    db = get_db(request)
+    sent = await push_service.send_test_push_all_admins(db)
+    if sent == 0:
+        raise HTTPException(
+            status_code=400,
+            detail="No admin push subscriptions found. Admins must enable notifications first.",
+        )
+    return {"ok": True, "sent": sent}

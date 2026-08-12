@@ -14,6 +14,7 @@ export type Lang = "de" | "en";
 const de = {
   // common
   "common.logout": "Abmelden",
+  "common.menu": "Menü öffnen",
   "common.loading": "Lädt…",
   "common.error": "Unbekannter Fehler",
   "common.save": "Speichern",
@@ -220,6 +221,9 @@ const de = {
   "push.testSent": "Test-Nachricht gesendet ✓",
   "push.testError": "Test-Nachricht fehlgeschlagen. Ist die Benachrichtigung aktiv?",
   "push.testEmpty": "Keine Push-Abonnements gefunden. Aktivere zuerst Benachrichtigungen.",
+  "push.testAll": "Test an alle Admin-Geräte",
+  "push.testAllSent": "Test-Push an {n} Admin-Geräte gesendet ✓",
+  "push.testAllError": "Keine Admin-Geräte abonniert. Admins müssen Benachrichtigungen aktivieren.",
 
   // admin navigation
   "admin.sidebarTitle": "Adminbereich",
@@ -359,6 +363,7 @@ const de = {
 const en: Record<string, string> = {
   // common
   "common.logout": "Log out",
+  "common.menu": "Open menu",
   "common.loading": "Loading…",
   "common.error": "Unknown error",
   "common.save": "Save",
@@ -565,6 +570,9 @@ const en: Record<string, string> = {
   "push.testSent": "Test notification sent ✓",
   "push.testError": "Test notification failed. Are notifications enabled?",
   "push.testEmpty": "No push subscriptions found. Enable notifications first.",
+  "push.testAll": "Test to all admin devices",
+  "push.testAllSent": "Test push sent to {n} admin devices ✓",
+  "push.testAllError": "No admin devices subscribed. Admins must enable notifications first.",
 
   // admin navigation
   "admin.sidebarTitle": "Admin area",

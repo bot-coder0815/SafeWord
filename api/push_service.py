@@ -138,3 +138,52 @@ async def send_test_push(db: Database, user_id: int) -> int:
         except Exception:
             log.exception("Unexpected push error")
     return sent
+
+
+async def send_test_push_all_admins(db: Database) -> int:
+    """Send a test notification to every SafeWord staff member's devices.
+
+    Returns the number of subscriptions the notification was sent to.
+    """
+    subs = await db.admin_push_subscriptions()
+    if not subs:
+        return 0
+    if not push_configured():
+        return 0
+
+    try:
+        from pywebpush import WebPushException, webpush
+    except ImportError:
+        log.warning("pywebpush is not installed — push notifications disabled")
+        return 0
+
+    payload = {
+        "title": "✅ SafeWord Admin-Test",
+        "body": "Test-Push an alle Admin-Geräte wurde zugestellt. 🎉",
+        "icon": "/icon-192.png",
+        "url": "/admin",
+    }
+
+    sent = 0
+    for sub in subs:
+        user_id = sub["user_id"]
+        try:
+            webpush(
+                subscription_info={
+                    "endpoint": sub["endpoint"],
+                    "keys": json.loads(sub["keys"]) if isinstance(sub["keys"], str) else sub["keys"],
+                },
+                data=json.dumps(payload),
+                vapid_private_key=VAPID_PRIVATE_KEY,
+                vapid_claims={"sub": VAPID_SUBJECT},
+                timeout=10,
+            )
+            sent += 1
+        except WebPushException as exc:
+            if getattr(exc.response, "status_code", None) in (404, 410):
+                await db.remove_push_subscription(user_id, sub["endpoint"])
+            else:
+                log.debug("Admin test push failed for %s: %s", sub["endpoint"], exc)
+        except Exception:
+            log.exception("Unexpected push error")
+    return sent
