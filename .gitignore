@@ -30,3 +30,6 @@ safeword-images/
 .DS_Store
 .idea/
 .vscode/
+
+# TypeScript build info
+*.tsbuildinfo
