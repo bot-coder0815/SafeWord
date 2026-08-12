@@ -21,6 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.api
+    image: safeword-api:latest
     container_name: safeword-api
     restart: unless-stopped
     env_file: .env
