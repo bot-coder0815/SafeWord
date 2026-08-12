@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Shield, MessageSquareWarning, Gauge, Users, Lock, Zap, GitBranch } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, loginUrl } from "@/lib/api";
@@ -163,7 +164,18 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="border-t border-white/5 py-8 text-center text-sm text-gray-500">
-        SafeWord • {t("landing.footer")} • v1.0.0
+        <p>
+          SafeWord • {t("landing.footer")} • {t("landing.footerVersion")}
+        </p>
+        <p className="mt-2">{t("landing.copyright")}</p>
+        <nav className="mt-4 flex justify-center gap-6">
+          <Link href="/impressum" className="transition-colors hover:text-gray-300">
+            {t("landing.impressum")}
+          </Link>
+          <Link href="/datenschutz" className="transition-colors hover:text-gray-300">
+            {t("landing.datenschutz")}
+          </Link>
+        </nav>
       </footer>
     </main>
   );

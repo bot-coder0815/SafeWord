@@ -66,6 +66,10 @@ const de = {
   "landing.teamSubtitle": "Die Menschen hinter SafeWord und ihre Rollen im Team.",
   "landing.teamEmpty": "Noch keine Teammitglieder hinterlegt.",
   "landing.footer": "Offizieller Moderation-Bot",
+  "landing.footerVersion": "Version 1.0.0",
+  "landing.copyright": "© 2026 SafeWord. Alle Rechte vorbehalten.",
+  "landing.impressum": "Impressum",
+  "landing.datenschutz": "Datenschutz",
 
   // dashboard home
   "dash.chooseServer": "Wähle einen Server",
@@ -401,6 +405,10 @@ const en: Record<string, string> = {
   "landing.teamSubtitle": "The people behind SafeWord and their roles in the team.",
   "landing.teamEmpty": "No team members yet.",
   "landing.footer": "Official moderation bot",
+  "landing.footerVersion": "Version 1.0.0",
+  "landing.copyright": "© 2026 SafeWord. All rights reserved.",
+  "landing.impressum": "Imprint",
+  "landing.datenschutz": "Privacy Policy",
 
   // dashboard home
   "dash.chooseServer": "Choose a server",
