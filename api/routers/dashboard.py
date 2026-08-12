@@ -219,7 +219,7 @@ async def update_guild_config(guild_id: int, payload: dict, request: Request):
     allowed = {
         "language", "mod_level", "log_channel_id", "action_delete",
         "action_warn", "action_timeout", "action_log", "timeout_minutes",
-        "default_lists", "bypass_roles", "bypass_users", "bypass_privileged",
+        "default_lists", "bypass_roles", "bypass_users",
         "std_word_action",
     }
     fields = {k: v for k, v in payload.items() if k in allowed}

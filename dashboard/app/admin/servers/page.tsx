@@ -59,6 +59,18 @@ export default function AdminServers() {
     }
   };
 
+  const toggleBypassPrivileged = async (s: AdminServer) => {
+    try {
+      await api(`/api/admin/servers/${s.guild_id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ bypass_privileged: !s.bypass_privileged }),
+      });
+      reload();
+    } catch (e) {
+      alert((e as Error).message);
+    }
+  };
+
   const kickBot = async (s: AdminServer) => {
     if (!window.confirm(`${t("adServ.kickConfirm")} "${s.name || s.guild_id}"?`)) return;
     try {
@@ -114,6 +126,7 @@ export default function AdminServers() {
                 <th className="pb-2">{t("adServ.thMembers")}</th>
                 <th className="pb-2">{t("adServ.thVersion")}</th>
                 <th className="pb-2">{t("adServ.thStatus")}</th>
+                <th className="pb-2">{t("settings.bypassPrivileged")}</th>
                 <th className="pb-2">{t("adServ.thInvite")}</th>
                 <th className="pb-2 text-right">{t("adServ.thActions")}</th>
               </tr>
@@ -133,6 +146,22 @@ export default function AdminServers() {
                     <span className={`badge ${STATUS_TONES[s.status] ?? "bg-white/5 text-gray-400"}`}>
                       {s.status}
                     </span>
+                  </td>
+                  <td className="py-3">
+                    <button
+                      onClick={() => toggleBypassPrivileged(s)}
+                      className={`relative h-6 w-11 rounded-full transition ${
+                        s.bypass_privileged ? "bg-safeword-green" : "bg-white/10"
+                      }`}
+                      title={t("settings.bypassPrivilegedDesc")}
+                      aria-label={t("settings.bypassPrivileged")}
+                    >
+                      <span
+                        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
+                          s.bypass_privileged ? "left-[22px]" : "left-0.5"
+                        }`}
+                      />
+                    </button>
                   </td>
                   <td className="py-3">
                     {invites[s.guild_id] ? (

@@ -84,7 +84,7 @@ async def server_action(
     db = get_db(request)
     if not await db.get_server(guild_id):
         raise HTTPException(status_code=404, detail="Server not found")
-    allowed = {"status", "maintenance"}
+    allowed = {"status", "maintenance", "bypass_privileged"}
     updates = {k: v for k, v in payload.items() if k in allowed}
     if "status" in updates and updates["status"] not in (
         "active",

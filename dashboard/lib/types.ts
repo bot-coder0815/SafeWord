@@ -116,6 +116,7 @@ export interface AdminServer {
   member_count: number;
   language: string;
   mod_level: number;
+  bypass_privileged: boolean;
   created_at: string;
   updated_at: string;
 }
