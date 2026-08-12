@@ -13,6 +13,9 @@ interface ChannelOption {
   type: number;
 }
 
+const asArray = (v: unknown): number[] =>
+  Array.isArray(v) ? v.map(Number).filter((n) => !Number.isNaN(n)) : [];
+
 export default function GuildSettings() {
   const params = useParams();
   const guildId = (params?.guildId as string) ?? "";
@@ -42,8 +45,8 @@ export default function GuildSettings() {
         action_warn: cfg.action_warn,
         action_timeout: cfg.action_timeout,
         action_log: cfg.action_log,
-        bypass_roles: cfg.bypass_roles ?? [],
-        bypass_users: cfg.bypass_users ?? [],
+        bypass_roles: asArray(cfg.bypass_roles),
+        bypass_users: asArray(cfg.bypass_users),
       }),
     });
     setSaved(true);
@@ -174,7 +177,7 @@ export default function GuildSettings() {
             <input
               className="input"
               placeholder={t("settings.bypassPlaceholder")}
-              value={(cfg.bypass_roles ?? []).join(", ")}
+              value={asArray(cfg.bypass_roles).join(", ")}
               onChange={(e) =>
                 setCfg({
                   ...cfg,
@@ -192,7 +195,7 @@ export default function GuildSettings() {
             <input
               className="input"
               placeholder={t("settings.bypassPlaceholder")}
-              value={(cfg.bypass_users ?? []).join(", ")}
+              value={asArray(cfg.bypass_users).join(", ")}
               onChange={(e) =>
                 setCfg({
                   ...cfg,

@@ -191,11 +191,21 @@ class Database:
         self._dsn = dsn
         self._pool: Optional[asyncpg.Pool] = None
 
+    @staticmethod
+    async def _init_conn(conn: asyncpg.Connection) -> None:
+        await conn.set_type_codec(
+            "jsonb", encoder=json.dumps, decoder=json.loads, schema="pg_catalog"
+        )
+        await conn.set_type_codec(
+            "json", encoder=json.dumps, decoder=json.loads, schema="pg_catalog"
+        )
+
     async def connect(self) -> None:
-        self._pool = await asyncpg.create_pool(self._dsn, min_size=1, max_size=10)
+        self._pool = await asyncpg.create_pool(
+            self._dsn, min_size=1, max_size=10, init=self._init_conn
+        )
         async with self._pool.acquire() as conn:
             await conn.execute(_SCHEMA)
-
     async def close(self) -> None:
         if self._pool:
             await self._pool.close()
@@ -268,12 +278,9 @@ class Database:
         if not fields:
             return
         cols = ", ".join(f"{k} = ${i + 1}" for i, k in enumerate(fields))
-        values = [
-            json.dumps(v) if isinstance(v, (dict, list)) else v for v in fields.values()
-        ]
         await self._execute(
             f"UPDATE servers SET {cols}, updated_at = now() WHERE guild_id = ${len(fields) + 1}",
-            *values,
+            *fields.values(),
             guild_id,
         )
 
