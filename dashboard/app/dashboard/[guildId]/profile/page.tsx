@@ -53,7 +53,7 @@ export default function GuildProfile() {
     try {
       const res = await api<{ avatar: string }>("/api/profile/apply", {
         method: "POST",
-        body: JSON.stringify({ guild_id: Number(guildId), avatar }),
+        body: JSON.stringify({ guild_id: guildId, avatar }),
       });
       setAvatar(res.avatar);
       setSaved(true);

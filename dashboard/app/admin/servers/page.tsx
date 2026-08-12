@@ -19,8 +19,8 @@ export default function AdminServers() {
   const { t, locale } = useI18n();
   const [servers, setServers] = useState<AdminServer[]>([]);
   const [loading, setLoading] = useState(true);
-  const [invites, setInvites] = useState<Record<number, InviteInfo>>({});
-  const [copied, setCopied] = useState<number | null>(null);
+  const [invites, setInvites] = useState<Record<string, InviteInfo>>({});
+  const [copied, setCopied] = useState<string | null>(null);
 
   const reload = () => {
     setLoading(true);
@@ -30,7 +30,7 @@ export default function AdminServers() {
   useEffect(reload, []);
 
   const loadInvites = async (list: AdminServer[]) => {
-    const entries: [number, InviteInfo][] = [];
+    const entries: [string, InviteInfo][] = [];
     for (const s of list) {
       try {
         const inv = await api<InviteInfo>(`/api/admin/servers/${s.guild_id}/invite`);
@@ -47,7 +47,7 @@ export default function AdminServers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, servers.length]);
 
-  const setStatus = async (gid: number, status: string) => {
+  const setStatus = async (gid: string, status: string) => {
     try {
       await api(`/api/admin/servers/${gid}`, {
         method: "PATCH",

@@ -13,8 +13,8 @@ interface ChannelOption {
   type: number;
 }
 
-const asArray = (v: unknown): number[] =>
-  Array.isArray(v) ? v.map(Number).filter((n) => !Number.isNaN(n)) : [];
+const asArray = (v: unknown): string[] =>
+  Array.isArray(v) ? v.map(String).filter((s) => s.length > 0 && !Number.isNaN(Number(s))) : [];
 
 export default function GuildSettings() {
   const params = useParams();
@@ -114,7 +114,7 @@ export default function GuildSettings() {
               className="input"
               value={cfg.log_channel_id ?? ""}
               onChange={(e) =>
-                setCfg({ ...cfg, log_channel_id: e.target.value ? Number(e.target.value) : null })
+                setCfg({ ...cfg, log_channel_id: e.target.value ? e.target.value : null })
               }
             >
               <option value="">{t("settings.logChannelNone")}</option>
@@ -182,11 +182,10 @@ export default function GuildSettings() {
                 onChange={(e) =>
                   setCfg({
                     ...cfg,
-                    bypass_roles: e.target.value
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean)
-                      .map(Number),
+                  bypass_roles: e.target.value
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean),
                   })
                 }
               />
@@ -200,11 +199,10 @@ export default function GuildSettings() {
                 onChange={(e) =>
                   setCfg({
                     ...cfg,
-                    bypass_users: e.target.value
-                      .split(",")
-                      .map((s) => s.trim())
-                      .filter(Boolean)
-                      .map(Number),
+                  bypass_users: e.target.value
+                    .split(",")
+                    .map((s) => s.trim())
+                    .filter(Boolean),
                   })
                 }
               />

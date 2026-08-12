@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -10,6 +11,7 @@ from datetime import datetime, timezone
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from . import push_service
 from .database import Database
@@ -19,6 +21,34 @@ from .version import __version__
 log = logging.getLogger("safeword.api")
 
 PUSH_POLL_SECONDS = int(os.environ.get("PUSH_POLL_SECONDS", "20"))
+
+# Discord snowflake IDs exceed Number.MAX_SAFE_INTEGER (2^53 - 1). JavaScript
+# would round them in JSON.parse, corrupting every subsequent lookup. We ship
+# such big ints as strings so the dashboard can round-trip them exactly.
+MAX_SAFE_INT = 2**53 - 1
+
+
+def _safe(o):
+    if isinstance(o, dict):
+        return {k: _safe(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_safe(v) for v in o]
+    if isinstance(o, int) and not isinstance(o, bool) and (o > MAX_SAFE_INT or o < -MAX_SAFE_INT):
+        return str(o)
+    return o
+
+
+class SafeJSONResponse(JSONResponse):
+    def render(self, content):
+        return (
+            json.dumps(
+                _safe(content),
+                ensure_ascii=False,
+                allow_nan=False,
+                indent=None,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        )
 
 
 async def _push_poll_loop(db: Database) -> None:
@@ -63,6 +93,7 @@ app = FastAPI(
     description="Backend for the SafeWord Discord moderation dashboard.",
     version=__version__,
     lifespan=lifespan,
+    default_response_class=SafeJSONResponse,
 )
 
 origins = [

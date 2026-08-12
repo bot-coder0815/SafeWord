@@ -22,15 +22,15 @@ export interface ServerConfig {
   status: string;
   language: string;
   mod_level: number;
-  log_channel_id: number | null;
+  log_channel_id: string | null;
   action_delete: boolean;
   action_warn: boolean;
   action_timeout: boolean;
   action_log: boolean;
   timeout_minutes: number;
   default_lists: Record<string, boolean>;
-  bypass_roles: number[];
-  bypass_users: number[];
+  bypass_roles: string[];
+  bypass_users: string[];
   bot_version: string | null;
   member_count: number;
 }
@@ -84,7 +84,7 @@ export interface LogEntry {
   id: number;
   type: string;
   level: string;
-  guild_id: number | null;
+  guild_id: string | null;
   message: string;
   stacktrace: string | null;
   created_at: string;
@@ -105,9 +105,9 @@ export interface AdminOverview {
 }
 
 export interface AdminServer {
-  guild_id: number;
+  guild_id: string;
   name: string;
-  owner_id: number | null;
+  owner_id: string | null;
   status: string;
   bot_version: string | null;
   member_count: number;
@@ -122,7 +122,7 @@ export interface AdminStats {
   server_growth: SeriesPoint[];
   action_counts: ActionCount[];
   top_words: WordCount[];
-  per_guild: { guild_id: number; count: number }[];
+  per_guild: { guild_id: string; count: number }[];
   servers: number;
   active_users: number;
   violations_total: number;
@@ -137,15 +137,15 @@ export interface WordListInfo {
 
 export interface BotProfile {
   avatar: string | null;
-  updated_by: number | null;
+  updated_by: string | null;
   updated_at: string | null;
 }
 
 export interface ProfileHistoryEntry {
   id: number;
   field: string;
-  guild_id: number | null;
-  updated_by: number | null;
+  guild_id: string | null;
+  updated_by: string | null;
   value: string | null;
   created_at: string;
 }
@@ -162,10 +162,10 @@ export interface TeamMember {
 
 export interface Incident {
   id: number;
-  guild_id: number;
+  guild_id: string;
   kind: string;
   severity: string;
-  actor_id: number | null;
+  actor_id: string | null;
   detail: Record<string, unknown> | null;
   consequence: string | null;
   status: string;

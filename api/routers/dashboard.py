@@ -224,6 +224,12 @@ async def update_guild_config(guild_id: int, payload: dict, request: Request):
     fields = {k: v for k, v in payload.items() if k in allowed}
     if not fields:
         raise HTTPException(status_code=400, detail="No valid fields provided")
+    if "log_channel_id" in fields and fields["log_channel_id"]:
+        fields["log_channel_id"] = int(fields["log_channel_id"])
+    elif "log_channel_id" in fields:
+        fields["log_channel_id"] = None
+    if "timeout_minutes" in fields:
+        fields["timeout_minutes"] = int(fields["timeout_minutes"] or 0)
     await db.update_server(guild_id, **fields)
     return await db.get_server(guild_id)
 

@@ -39,7 +39,7 @@ export default function AdminIncidents() {
     }
   };
 
-  const reEnable = async (guildId: number) => {
+  const reEnable = async (guildId: string) => {
     if (!window.confirm(t("security.reEnableConfirm"))) return;
     try {
       const res = await api<{ ok: boolean }>(`/api/security/guilds/${guildId}/enable`, {
