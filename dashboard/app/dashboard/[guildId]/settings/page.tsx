@@ -66,7 +66,7 @@ export default function GuildSettings() {
   ];
 
   return (
-    <div className="max-w-3xl space-y-8">
+    <div className="max-w-5xl space-y-8">
       <header>
         <h1 className="text-3xl font-bold text-white">{t("settings.title")}</h1>
         <p className="mt-1 text-sm text-gray-400">{t("settings.subtitle")}</p>
@@ -141,74 +141,76 @@ export default function GuildSettings() {
         </div>
       </div>
 
-      <div className="card">
-        <h2 className="mb-4 text-lg font-semibold text-white">{t("settings.actions")}</h2>
-        <div className="space-y-3">
-          {actions.map((a) => (
-            <div key={a.key} className="flex items-center justify-between rounded-lg bg-white/5 px-4 py-3">
-              <div>
-                <div className="font-medium text-white">{a.label}</div>
-                <div className="text-xs text-gray-400">{a.desc}</div>
-              </div>
-              <button
-                onClick={() => toggle(a.key)}
-                className={`relative h-6 w-11 rounded-full transition ${
-                  cfg[a.key] ? "bg-safeword-green" : "bg-white/10"
-                }`}
-                aria-label={a.label}
-              >
-                <span
-                  className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
-                    cfg[a.key] ? "left-[22px]" : "left-0.5"
+      <div className="grid gap-8 lg:grid-cols-2">
+        <div className="card">
+          <h2 className="mb-4 text-lg font-semibold text-white">{t("settings.actions")}</h2>
+          <div className="space-y-3">
+            {actions.map((a) => (
+              <div key={a.key} className="flex items-center justify-between rounded-lg bg-white/5 px-4 py-3">
+                <div>
+                  <div className="font-medium text-white">{a.label}</div>
+                  <div className="text-xs text-gray-400">{a.desc}</div>
+                </div>
+                <button
+                  onClick={() => toggle(a.key)}
+                  className={`relative h-6 w-11 rounded-full transition ${
+                    cfg[a.key] ? "bg-safeword-green" : "bg-white/10"
                   }`}
-                />
-              </button>
-            </div>
-          ))}
+                  aria-label={a.label}
+                >
+                  <span
+                    className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-all ${
+                      cfg[a.key] ? "left-[22px]" : "left-0.5"
+                    }`}
+                  />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
 
-      <div className="card">
-        <h2 className="mb-4 text-lg font-semibold text-white">{t("settings.bypass")}</h2>
-        <p className="mb-4 text-sm text-gray-400">{t("settings.bypassDesc")}</p>
-        <div className="space-y-4">
-          <div>
-            <label className="label">{t("settings.bypassRoles")}</label>
-            <input
-              className="input"
-              placeholder={t("settings.bypassPlaceholder")}
-              value={asArray(cfg.bypass_roles).join(", ")}
-              onChange={(e) =>
-                setCfg({
-                  ...cfg,
-                  bypass_roles: e.target.value
-                    .split(",")
-                    .map((s) => s.trim())
-                    .filter(Boolean)
-                    .map(Number),
-                })
-              }
-            />
+        <div className="card">
+          <h2 className="mb-4 text-lg font-semibold text-white">{t("settings.bypass")}</h2>
+          <p className="mb-4 text-sm text-gray-400">{t("settings.bypassDesc")}</p>
+          <div className="space-y-4">
+            <div>
+              <label className="label">{t("settings.bypassRoles")}</label>
+              <input
+                className="input"
+                placeholder={t("settings.bypassPlaceholder")}
+                value={asArray(cfg.bypass_roles).join(", ")}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    bypass_roles: e.target.value
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean)
+                      .map(Number),
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.bypassUsers")}</label>
+              <input
+                className="input"
+                placeholder={t("settings.bypassPlaceholder")}
+                value={asArray(cfg.bypass_users).join(", ")}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    bypass_users: e.target.value
+                      .split(",")
+                      .map((s) => s.trim())
+                      .filter(Boolean)
+                      .map(Number),
+                  })
+                }
+              />
+            </div>
+            <p className="text-xs text-gray-500">{t("settings.bypassHint")}</p>
           </div>
-          <div>
-            <label className="label">{t("settings.bypassUsers")}</label>
-            <input
-              className="input"
-              placeholder={t("settings.bypassPlaceholder")}
-              value={asArray(cfg.bypass_users).join(", ")}
-              onChange={(e) =>
-                setCfg({
-                  ...cfg,
-                  bypass_users: e.target.value
-                    .split(",")
-                    .map((s) => s.trim())
-                    .filter(Boolean)
-                    .map(Number),
-                })
-              }
-            />
-          </div>
-          <p className="text-xs text-gray-500">{t("settings.bypassHint")}</p>
         </div>
       </div>
 
