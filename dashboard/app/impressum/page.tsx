@@ -2,65 +2,54 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Impressum — SafeWord",
-  description: "Impressum für SafeWord.",
+  title: "Imprint — SafeWord",
+  description: "Imprint for SafeWord.",
 };
 
 export default function ImpressumPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
       <Link href="/" className="text-sm text-blurple transition-colors hover:text-blurple/80">
-        ← Zurück zur Startseite
+        ← Back to home
       </Link>
-      <h1 className="mt-6 text-3xl font-bold text-white">Impressum</h1>
+      <h1 className="mt-6 text-3xl font-bold text-white">Imprint</h1>
 
       <section className="mt-8 space-y-8 text-sm leading-relaxed text-gray-300">
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">Angaben gemäß § 5 DDG</h2>
+          <h2 className="text-lg font-semibold text-white">Information in accordance with § 5 DDG</h2>
           <p className="mt-3">
             SafeWord – Official moderation bot
             <br />
-            Inhaber: <em>[Name Vorname Nachname]</em>
+            Owner: <em>[Discord username]</em>
             <br />
-            Adresse: <em>[Straße Hausnummer]</em>
-            <br />
-            PLZ Ort: <em>[PLZ Ort]</em>
-            <br />
-            Land: Deutschland
+            Contact email: <em>[your email]</em>
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">Kontakt</h2>
+          <h2 className="text-lg font-semibold text-white">Contact</h2>
           <p className="mt-3">
-            E-Mail: <em>[kontakt@example.de]</em>
+            Email: <em>[your email]</em>
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">Verantwortlich für den Inhalt</h2>
+          <h2 className="text-lg font-semibold text-white">Responsible for content</h2>
           <p className="mt-3">
-            <em>[Name Vorname Nachname]</em>
-            <br />
-            <em>[Straße Hausnummer, PLZ Ort]</em>
+            <em>[Discord username]</em>
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">Haftungsausschluss</h2>
+          <h2 className="text-lg font-semibold text-white">Disclaimer</h2>
           <p className="mt-3">
-            Die Inhalte dieser Website wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
-            Vollständigkeit und Aktualität der Inhalte kann jedoch keine Gewähr übernommen werden.
-            Als Diensteanbieter sind wir für eigene Inhalte auf diesen Seiten nach den allgemeinen
-            Gesetzen verantwortlich. Wir sind jedoch nicht verpflichtet, übermittelte oder
-            gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf
-            eine rechtswidrige Tätigkeit hinweisen.
+            The content of this website has been created with the greatest care. However, no
+            guarantee can be given for the accuracy, completeness, and up-to-dateness of the
+            content. As a service provider, we are responsible for our own content on these pages
+            in accordance with general law. We are not obligated to monitor transmitted or stored
+            third-party information or to investigate circumstances that indicate illegal activity.
           </p>
         </div>
-
-        <p className="text-xs text-gray-500">
-          Hinweis: Bitte ersetze die Platzhalter in eckigen Klammern durch deine echten Angaben.
-        </p>
       </section>
     </main>
   );

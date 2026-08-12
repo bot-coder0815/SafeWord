@@ -58,6 +58,7 @@ services:
     pull_policy: never
     container_name: safeword-tunnel
     restart: unless-stopped
+    user: root
     command: tunnel --url http://safeword-api:8000 --no-autoupdate --logfile /tunnel-log/tunnel.log
     volumes:
       - tunnel-log:/tunnel-log

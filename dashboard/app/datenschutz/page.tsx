@@ -2,75 +2,76 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Datenschutz — SafeWord",
-  description: "Datenschutzerklärung für SafeWord.",
+  title: "Privacy Policy — SafeWord",
+  description: "Privacy policy for SafeWord.",
 };
 
 export default function DatenschutzPage() {
   return (
     <main className="mx-auto max-w-3xl px-6 py-12">
       <Link href="/" className="text-sm text-blurple transition-colors hover:text-blurple/80">
-        ← Zurück zur Startseite
+        ← Back to home
       </Link>
-      <h1 className="mt-6 text-3xl font-bold text-white">Datenschutzerklärung</h1>
+      <h1 className="mt-6 text-3xl font-bold text-white">Privacy Policy</h1>
 
       <section className="mt-8 space-y-8 text-sm leading-relaxed text-gray-300">
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">1. Verantwortlicher</h2>
+          <h2 className="text-lg font-semibold text-white">1. Responsible party</h2>
           <p className="mt-3">
-            Verantwortlich für die Datenverarbeitung im Sinne der DSGVO ist der Inhaber von
-            SafeWord. Die Kontaktdaten finden sich im <Link href="/impressum" className="text-blurple transition-colors hover:text-blurple/80">Impressum</Link>.
+            The party responsible for data processing within the meaning of the GDPR (General Data
+            Protection Regulation) is the owner of SafeWord. Contact details can be found in the{" "}
+            <Link href="/impressum" className="text-blurple transition-colors hover:text-blurple/80">
+              imprint
+            </Link>
+            .
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">2. Datenerfassung auf dieser Website</h2>
+          <h2 className="text-lg font-semibold text-white">2. Data collection on this website</h2>
           <p className="mt-3">
-            Diese Website wird über den Hosting-Anbieter Vercel Inc., 340 S Lemon Ave #4133,
-            Walnut, CA 91789, USA, bereitgestellt. Beim Aufruf dieser Website erhebt der
-            Hosting-Anbieter automatisch technische Daten (z.&nbsp;B. IP-Adresse, Uhrzeit des
-            Zugriffs, Browser-Typ). Diese Daten sind technisch erforderlich, um die Website
-            auszuliefern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.
+            This website is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA.
+            When you visit this website, the hosting provider automatically collects technical data
+            (e.g. IP address, time of access, browser type). This data is technically required to
+            deliver the website. The legal basis is Art. 6 para. 1 lit. f GDPR.
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">3. Anmeldung über Discord (OAuth)</h2>
+          <h2 className="text-lg font-semibold text-white">3. Signing in via Discord (OAuth)</h2>
           <p className="mt-3">
-            Zum Anmelden nutzt SafeWord den OAuth-Login von Discord. Hierbei werden von Discord die
-            öffentliche Benutzerkennung (User-ID), dein Benutzername und dein Avatar übertragen.
-            Diese Daten dienen ausschließlich der Authentifizierung und der Verwaltung deiner
-            Server im Dashboard. Eine Speicherung der Discord-Daten erfolgt nur, soweit dies für
-            die Funktion des Dashboards erforderlich ist.
+            SafeWord uses Discord&apos;s OAuth login for authentication. Discord provides your public
+            user ID, username, and avatar. This data is used exclusively for authentication and for
+            managing your servers in the dashboard. Discord data is only stored to the extent
+            required for the dashboard to function.
           </p>
         </div>
 
         <div className="card">
           <h2 className="text-lg font-semibold text-white">4. Cookies</h2>
           <p className="mt-3">
-            Diese Website verwendet ausschließlich technisch notwendige Cookies bzw. Session-Daten
-            (Authentifizierungs-Session), die für das Einloggen in das Dashboard erforderlich sind.
-            Tracking- oder Analyse-Cookies von Drittanbietern werden nicht eingesetzt.
+            This website only uses technically necessary cookies or session data (authentication
+            session) required to log into the dashboard. No third-party tracking or analytics
+            cookies are used.
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">5. Deine Rechte</h2>
+          <h2 className="text-lg font-semibold text-white">5. Your rights</h2>
           <p className="mt-3">
-            Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung,
-            Datenübertragbarkeit sowie das Recht, einer Verarbeitung zu widersprechen
-            (Art. 15–21 DSGVO). Zudem hast du das Recht, dich bei einer Aufsichtsbehörde zu
-            beschweren. Sende Anfragen bitte an die im Impressum genannten Kontaktdaten.
+            You have the right to access, rectification, erasure, restriction of processing, data
+            portability, and the right to object to processing (Art. 15–21 GDPR). You also have the
+            right to lodge a complaint with a supervisory authority. Please send requests to the
+            contact details listed in the imprint.
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-lg font-semibold text-white">6. Server- und Messaging-Daten</h2>
+          <h2 className="text-lg font-semibold text-white">6. Server and message data</h2>
           <p className="mt-3">
-            SafeWord verarbeitet Nachrichteninhalte ausschließlich zur Ausführung der
-            Moderation-Funktionen (z.&nbsp;B. automatische Wortfilterung) in den Discord-Servern,
-            auf denen der Bot freigeschaltet ist. Die Daten verbleiben in der eigenen Datenbank
-            des Serverbetreibers und werden nicht an Dritte weitergegeben.
+            SafeWord processes message content exclusively to perform moderation functions (e.g.
+            automatic word filtering) on the Discord servers where the bot is enabled. The data
+            stays in the server operator&apos;s own database and is never shared with third parties.
           </p>
         </div>
       </section>
