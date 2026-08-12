@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS servers (
     bypass_roles     JSONB DEFAULT '[]',
     bypass_users     JSONB DEFAULT '[]',
     bypass_privileged BOOLEAN DEFAULT FALSE,
+    std_word_action  TEXT DEFAULT 'delete',
     admin_ok         BOOLEAN DEFAULT TRUE,
     bot_version      TEXT,
     member_count     INTEGER DEFAULT 0,
@@ -172,6 +173,7 @@ ALTER TABLE servers ADD COLUMN IF NOT EXISTS default_lists JSONB DEFAULT '{"de":
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bypass_roles JSONB DEFAULT '[]';
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bypass_users JSONB DEFAULT '[]';
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bypass_privileged BOOLEAN DEFAULT FALSE;
+ALTER TABLE servers ADD COLUMN IF NOT EXISTS std_word_action TEXT DEFAULT 'delete';
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS admin_ok BOOLEAN DEFAULT TRUE;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bot_version TEXT;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS member_count INTEGER DEFAULT 0;

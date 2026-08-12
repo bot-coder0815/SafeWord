@@ -33,6 +33,7 @@ export interface ServerConfig {
   bypass_roles: string[];
   bypass_users: string[];
   bypass_privileged: boolean;
+  std_word_action: string;
   bot_version: string | null;
   member_count: number;
 }

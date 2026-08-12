@@ -37,6 +37,8 @@ export default function GuildFilters() {
   const [form, setForm] = useState({ word: "", category: "custom", severity: 3, action: "delete" });
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [stdAction, setStdAction] = useState("delete");
 
   useEffect(() => {
     setLoading(true);
@@ -51,9 +53,24 @@ export default function GuildFilters() {
         setStdWords(sw);
         setLists(l.available);
         setDefaultLists(cfg.default_lists ?? {});
+        setStdAction(cfg.std_word_action || "delete");
       })
       .finally(() => setLoading(false));
   }, [guildId]);
+
+  const filteredStd = stdWords.filter(
+    (w) =>
+      w.word.toLowerCase().includes(search.toLowerCase()) ||
+      w.category.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const saveStdAction = async (val: string) => {
+    setStdAction(val);
+    await api(`/api/guilds/${guildId}`, {
+      method: "PUT",
+      body: JSON.stringify({ std_word_action: val }),
+    });
+  };
 
   const addWord = async () => {
     setMsg(null);
@@ -265,7 +282,7 @@ export default function GuildFilters() {
       </div>
 
       <div className="card">
-        <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-white">
               {t("filters.stdWords", { count: stdWords.length })}
@@ -279,6 +296,31 @@ export default function GuildFilters() {
           >
             <RotateCcw className="h-3.5 w-3.5" /> {t("filters.stdWordsResetAll")}
           </button>
+        </div>
+        <div className="mb-4 flex flex-wrap items-end gap-3">
+          <div className="flex-1 min-w-[200px]">
+            <label className="label">{t("filters.search")}</label>
+            <input
+              className="input"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder={t("filters.searchPlaceholder")}
+            />
+          </div>
+          <div>
+            <label className="label">{t("filters.stdWordDefaultAction")}</label>
+            <select
+              className="input"
+              value={stdAction}
+              onChange={(e) => saveStdAction(e.target.value)}
+            >
+              {ACTIONS.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         {loading ? (
           <p className="text-sm text-gray-500">{t("common.loading")}</p>
@@ -297,7 +339,7 @@ export default function GuildFilters() {
                 </tr>
               </thead>
               <tbody>
-                {stdWords.map((w) => (
+                {filteredStd.map((w) => (
                   <tr key={`${w.language}-${w.word}`} className="border-b border-white/5 last:border-0">
                     <td className="py-2 font-mono text-gray-100">
                       {w.word}

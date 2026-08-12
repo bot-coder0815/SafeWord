@@ -254,9 +254,21 @@ class MessageEvents(commands.Cog):
             await self._send_log_embed(message, entry, executed)
 
     def _resolve_actions(self, entry, server: dict) -> list[str]:
-        """Per-word action override wins, server defaults otherwise."""
+        """Per-word action override wins, server defaults otherwise.
+
+        For standard (default-list) words without an explicit per-word
+        override, the server's ``std_word_action`` is used as the default
+        punishment (default: delete). If that is not configured, the granular
+        server action toggles are used as a fallback.
+        """
         if entry.action:
             return [entry.action]
+        std_action = server.get("std_word_action")
+        if std_action:
+            actions = [std_action]
+            if server.get("action_log"):
+                actions.append("log")
+            return actions
         actions: list[str] = []
         if server.get("action_delete"):
             actions.append("delete")
