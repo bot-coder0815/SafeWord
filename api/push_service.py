@@ -42,6 +42,9 @@ async def send_incident_push(db: Database, incident: Dict[str, Any], guild_name:
         "bot_removed": "Bot was removed",
     }
     kind = incident.get("kind", "incident")
+    if kind == "bot_removed":
+        log.info("No push for incident kind 'bot_removed' (bot was removed normally)")
+        return
     title = "🛡️ SafeWord Sicherheitsalarm"
     body = (
         f"{guild_name}: {labels.get(kind, kind)}. "
