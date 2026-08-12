@@ -68,10 +68,23 @@ class MessageEvents(commands.Cog):
         if not message.guild:
             return
         if not message.content:
+            log.debug(
+                "Guild %s: empty content (author %s) — Message Content Intent off?",
+                message.guild.id,
+                message.author.id,
+            )
             return
 
         server = await self.bot.db.get_server(message.guild.id)
-        if not server or server.get("status") != "active":
+        if not server:
+            log.debug("Guild %s: no server row, filtering skipped", message.guild.id)
+            return
+        if server.get("status") != "active":
+            log.debug(
+                "Guild %s: status=%r, filtering skipped",
+                message.guild.id,
+                server.get("status"),
+            )
             return
 
         if await self._is_bypassed(message, server):
@@ -90,7 +103,6 @@ class MessageEvents(commands.Cog):
         _, _, _, entry = result
         mod_level = server.get("mod_level") or 3
         actions = self._resolve_actions(entry, server)
-
         # Words below the moderation level are only logged if no action was
         # explicitly configured (per-word override or server action settings).
         explicit = bool(entry.action) or any(
@@ -99,6 +111,19 @@ class MessageEvents(commands.Cog):
         )
         if entry.severity < mod_level and not explicit:
             actions = ["log"]
+
+        log.info(
+            "Guild %s: violation word=%r category=%s severity=%s mod_level=%s actions=%s "
+            "perms_manage_messages=%s perms_moderate=%s",
+            message.guild.id,
+            entry.word,
+            entry.category,
+            entry.severity,
+            mod_level,
+            actions,
+            bool(message.guild.me.guild_permissions.manage_messages),
+            bool(message.guild.me.guild_permissions.moderate_members),
+        )
 
         await self.bot.db.log_violation(
             guild_id=message.guild.id,
