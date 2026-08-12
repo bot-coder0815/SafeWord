@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+.tunnel-url
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+
+# Database / data
+*.sqlite3
+pgdata/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
