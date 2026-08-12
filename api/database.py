@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS servers (
     default_lists    JSONB DEFAULT '{"de": true, "en": true}',
     bypass_roles     JSONB DEFAULT '[]',
     bypass_users     JSONB DEFAULT '[]',
+    admin_ok         BOOLEAN DEFAULT TRUE,
     bot_version      TEXT,
     member_count     INTEGER DEFAULT 0,
     created_at       TIMESTAMPTZ DEFAULT now(),
@@ -169,6 +170,7 @@ ALTER TABLE servers ADD COLUMN IF NOT EXISTS timeout_minutes INTEGER DEFAULT 60;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS default_lists JSONB DEFAULT '{"de": true, "en": true}';
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bypass_roles JSONB DEFAULT '[]';
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bypass_users JSONB DEFAULT '[]';
+ALTER TABLE servers ADD COLUMN IF NOT EXISTS admin_ok BOOLEAN DEFAULT TRUE;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bot_version TEXT;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS member_count INTEGER DEFAULT 0;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT now();

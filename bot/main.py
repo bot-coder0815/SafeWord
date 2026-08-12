@@ -49,7 +49,8 @@ class SafeWordBot(commands.Bot):
 
         await self.add_cog(FilterCommands(self))
         await self.add_cog(SettingsCommands(self))
-        await self.add_cog(MessageEvents(self))
+        message_events = MessageEvents(self)
+        await self.add_cog(message_events)
         await self.add_cog(SecurityEvents(self))
 
         @self.tree.error
@@ -80,6 +81,7 @@ class SafeWordBot(commands.Bot):
 
         self.loop.create_task(self._presence_loop())
         self.loop.create_task(self._announce_loop())
+        self.loop.create_task(message_events._perms_loop())
         await self.tree.sync()
         log.info("Commands synced")
 

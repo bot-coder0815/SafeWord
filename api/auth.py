@@ -19,7 +19,9 @@ COOKIE_SECURE = os.environ.get("COOKIE_SECURE", "false").lower() == "true"
 
 MANAGE_GUILD = 1 << 5  # Discord permission bit for "Manage Server"
 
-BOT_PERMISSIONS = 1428078328864  # Manage Guild, View/Send Messages, Manage Messages, Embed Links, Read History, Use Slash Commands, Moderate Members
+ADMINISTRATOR = 1 << 3  # Discord permission bit for "Administrator"
+
+BOT_PERMISSIONS = ADMINISTRATOR  # Admin: covers delete/timeout/kick/ban + role hierarchy
 
 ROLE_LEVELS = {"moderator": 1, "developer": 2, "owner": 3}
 
@@ -206,6 +208,7 @@ def admin_guilds_for(user: dict, guilds: list[dict], known: dict[int, dict]) -> 
                     "member_count": known_g.get("member_count", 0) if known_g else 0,
                     "bot_in_server": known_g is not None,
                     "bot_status": (known_g or {}).get("status", "invite"),
+                    "bot_has_admin": bool((known_g or {}).get("admin_ok", True)),
                 }
             )
     return out

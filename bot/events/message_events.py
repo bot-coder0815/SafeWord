@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import datetime
 import logging
 
@@ -53,6 +54,7 @@ class MessageEvents(commands.Cog):
             bot_version=self.bot.version,
         )
         await self.bot.db.bump_stat("servers_joined", 1)
+        await self._check_bot_permissions(guild)
         log.info("Joined guild %s (%s)", guild.name, guild.id)
 
     @commands.Cog.listener()
@@ -61,6 +63,79 @@ class MessageEvents(commands.Cog):
             await self.bot.db.update_server(guild.id, status="removed")
         await self.bot.filters.invalidate(guild.id)
         log.info("Left guild %s (%s)", guild.name, guild.id)
+
+    async def _perms_loop(self) -> None:
+        """Periodically re-check the bot's Administrator permission in every
+        active guild so a later permission removal is also detected."""
+        await self.bot.wait_until_ready()
+        while not self.bot.is_closed():
+            try:
+                for guild in self.bot.guilds:
+                    try:
+                        await self._check_bot_permissions(guild)
+                    except Exception:
+                        log.exception("Perm check failed for guild %s", guild.id)
+            except Exception:
+                log.exception("Perm loop iteration failed")
+            await asyncio.sleep(600)
+
+    async def _check_bot_permissions(self, guild: discord.Guild) -> None:
+        """Verify the bot still has the Administrator permission.
+
+        If it was removed (e.g. deselected at invite), flag the server in the
+        database (shown as a warning in the dashboard) and post one notice in
+        a guild channel. No DM is sent to admins. Only posts once per state
+        change so it does not spam on the periodic check.
+        """
+        if guild.me is None:
+            return
+        has_admin = bool(guild.me.guild_permissions.administrator)
+        server = await self.bot.db.get_server(guild.id)
+        if not server:
+            return
+        previously_ok = bool(server.get("admin_ok", True))
+        if has_admin == previously_ok:
+            return
+        await self.bot.db.update_server(guild.id, admin_ok=has_admin)
+        if has_admin:
+            log.info("Guild %s: Administrator permission restored", guild.id)
+            return
+
+        log.warning(
+            "Guild %s: bot has no Administrator permission, flagging server",
+            guild.id,
+        )
+        channel = self._notice_channel(guild)
+        if channel is None:
+            return
+        lang = "de" if server.get("language") == "de" else "en"
+        text = {
+            "de": (
+                "⚠️ **SafeWord hat nicht die Administrator-Berechtigung!**\n"
+                "Ohne diese Berechtigung kann der Filter Nachrichten nicht zuverlässig "
+                "löschen, verwarnen oder zeitweilig stummschalten. Bitte den Bot mit "
+                "der Administrator-Berechtigung neu einladen."
+            ),
+            "en": (
+                "⚠️ **SafeWord is missing the Administrator permission!**\n"
+                "Without it the filter cannot reliably delete, warn or timeout messages. "
+                "Please re-invite the bot with the Administrator permission."
+            ),
+        }[lang]
+        try:
+            await channel.send(text)
+        except discord.HTTPException:
+            log.debug("Could not post permission notice in %s", channel.id)
+
+    def _notice_channel(self, guild: discord.Guild):
+        if guild.system_channel is not None and guild.system_channel.permissions_for(
+            guild.me
+        ).send_messages:
+            return guild.system_channel
+        for ch in guild.text_channels:
+            if ch.permissions_for(guild.me).send_messages:
+                return ch
+        return None
 
     async def _process(self, message: discord.Message) -> None:
         if message.author.bot:

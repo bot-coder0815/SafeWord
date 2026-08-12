@@ -82,6 +82,7 @@ const de = {
   "dash.notInstalled": "Noch nicht installiert ({count})",
   "dash.openDashboard": "Dashboard öffnen →",
   "dash.inviteBot": "Bot einladen",
+  "dash.missingAdminPerm": "Admin-Berechtigung fehlt",
 
   // guild navigation
   "guild.sidebarTitle": "Server Dashboard",
@@ -421,6 +422,7 @@ const en: Record<string, string> = {
   "dash.notInstalled": "Not installed yet ({count})",
   "dash.openDashboard": "Open dashboard →",
   "dash.inviteBot": "Invite bot",
+  "dash.missingAdminPerm": "Admin permission missing",
 
   // guild navigation
   "guild.sidebarTitle": "Server Dashboard",

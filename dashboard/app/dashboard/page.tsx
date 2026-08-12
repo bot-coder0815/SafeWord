@@ -141,6 +141,11 @@ export default function DashboardHome() {
                     <div className="flex items-center gap-1 text-xs text-gray-400">
                       <Users className="h-3 w-3" /> {g.member_count.toLocaleString(locale)}
                     </div>
+                    {!g.bot_has_admin && (
+                      <div className="mt-1.5 flex items-center gap-1.5 rounded-md bg-safeword-yellow/10 px-2 py-1 text-xs text-safeword-yellow">
+                        <Ban className="h-3 w-3 shrink-0" /> {t("dash.missingAdminPerm")}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="mt-3 text-xs text-blurple group-hover:underline">

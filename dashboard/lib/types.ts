@@ -5,6 +5,7 @@ export interface Guild {
   member_count: number;
   bot_in_server: boolean;
   bot_status: string;
+  bot_has_admin: boolean;
 }
 
 export interface Me {
