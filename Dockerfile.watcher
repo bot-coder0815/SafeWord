@@ -1,0 +1,7 @@
+FROM alpine/git:latest
+
+COPY scripts/tunnel-watcher.sh /usr/local/bin/tunnel-watcher.sh
+
+RUN chmod +x /usr/local/bin/tunnel-watcher.sh
+
+ENTRYPOINT ["/usr/local/bin/tunnel-watcher.sh"]

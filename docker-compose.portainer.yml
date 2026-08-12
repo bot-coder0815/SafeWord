@@ -58,10 +58,31 @@ services:
     pull_policy: never
     container_name: safeword-tunnel
     restart: unless-stopped
-    command: tunnel --url http://safeword-api:8000 --no-autoupdate
+    command: tunnel --url http://safeword-api:8000 --no-autoupdate --logfile /tunnel-log/tunnel.log
+    volumes:
+      - tunnel-log:/tunnel-log
     depends_on:
       api:
         condition: service_started
 
+  tunnel-watcher:
+    image: safeword-tunnel-watcher:latest
+    pull_policy: never
+    container_name: safeword-tunnel-watcher
+    restart: unless-stopped
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      REPO_URL: ${REPO_URL}
+      REPO_BRANCH: main
+      REPO_FILE: config/instance-url.json
+    volumes:
+      - tunnel-log:/tunnel-log:ro
+      - watch-repo:/repo
+    depends_on:
+      tunnel:
+        condition: service_started
+
 volumes:
   pgdata:
+  tunnel-log:
+  watch-repo:
