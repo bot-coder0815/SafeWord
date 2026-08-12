@@ -1,5 +1,5 @@
-/* SafeWord PWA service worker — offline shell + Web Push notifications */
-const CACHE = "safeword-v1";
+/* WordLock PWA service worker — offline shell + Web Push notifications */
+const CACHE = "wordlock-v1";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -40,7 +40,7 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("push", (event) => {
   let data = {
-    title: "SafeWord",
+    title: "WordLock",
     body: "",
     icon: "/icon-192.png",
     badge: "/icon-192.png",
@@ -56,7 +56,7 @@ self.addEventListener("push", (event) => {
       body: data.body,
       icon: data.icon,
       badge: data.badge,
-      tag: "safeword-alert",
+      tag: "wordlock-alert",
       renotify: true,
       data: { url: data.url },
     })

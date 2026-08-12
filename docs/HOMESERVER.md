@@ -1,6 +1,6 @@
 # Home-Server Deployment
 
-Dieses Dokument beschreibt, wie du SafeWord auf deinem eigenen Server
+Dieses Dokument beschreibt, wie du WordLock auf deinem eigenen Server
 (Homelab, VPS oder alter PC mit Linux) betreibst. Das **Dashboard läuft auf
 Vercel**, auf deinem Server laufen **Bot, API und PostgreSQL**. Der Zugriff
 von außen läuft über eine Domain mit HTTPS (nötig für den Discord-OAuth-Login).
@@ -46,8 +46,8 @@ sudo usermod -aG docker "$USER"
 ## 2. Projekt auf den Server kopieren
 
 ```bash
-git clone <dein-repo-url> safeword
-cd safeword
+git clone <dein-repo-url> wordlock
+cd wordlock
 cp .env.example .env
 ```
 
@@ -60,8 +60,8 @@ cp .env.example .env
 | `DISCORD_CLIENT_SECRET` | OAuth2-Secret |
 | `ADMIN_WHITELIST_IDS` | deine Discord-ID (kommagetrennt) |
 | `JWT_SECRET` | langes zufälliges Secret (`openssl rand -hex 32`) |
-| `DISCORD_REDIRECT_URI` | deine **Vercel-Dashboard-URL** + `/api/auth/callback` (z. B. `https://safeword.vercel.app/api/auth/callback`) |
-| `DASHBOARD_URL` | deine Vercel-Dashboard-URL (z. B. `https://safeword.vercel.app`) |
+| `DISCORD_REDIRECT_URI` | deine **Vercel-Dashboard-URL** + `/api/auth/callback` (z. B. `https://wordlock.vercel.app/api/auth/callback`) |
+| `DASHBOARD_URL` | deine Vercel-Dashboard-URL (z. B. `https://wordlock.vercel.app`) |
 | `CORS_ORIGINS` | deine Vercel-Dashboard-URL (damit nur dein Dashboard die API nutzt) |
 | `COOKIE_SECURE` | `true` |
 | `DATA_DIR` | `/app/data` |
@@ -156,13 +156,13 @@ dynamischer IP ein DDNS-Dienst wie DuckDNS).
 
 ### Empfehlung: kostenlose Subdomain via DuckDNS
 
-DuckDNS vergibt kostenlos eine stabile Subdomain (z. B. `safeword.duckdns.org`),
+DuckDNS vergibt kostenlos eine stabile Subdomain (z. B. `wordlock.duckdns.org`),
 die auf deine Heim-IP zeigt — auch bei wechselnder IP. Damit bekommst du mit
 Caddy automatisch HTTPS, und die URL ändert sich nie (anders als bei Tunneln).
 
 ```bash
 # https://www.duckdns.org  -> kostenlosen Token holen
-curl "https://www.duckdns.org/update?domains=safeword&token=<dein-token>&ip="
+curl "https://www.duckdns.org/update?domains=wordlock&token=<dein-token>&ip="
 ```
 
 Für dauerhafte Aktualisierung einen Cron-Job anlegen:
@@ -170,10 +170,10 @@ Für dauerhafte Aktualisierung einen Cron-Job anlegen:
 ```bash
 crontab -e
 # alle 5 Minuten die IP aktualisieren:
-*/5 * * * * curl -s "https://www.duckdns.org/update?domains=safeword&token=<dein-token>&ip=" >/dev/null
+*/5 * * * * curl -s "https://www.duckdns.org/update?domains=wordlock&token=<dein-token>&ip=" >/dev/null
 ```
 
-Danach im Caddyfile einfach `api.safeword.duckdns.org` statt
+Danach im Caddyfile einfach `api.wordlock.duckdns.org` statt
 `api.deinedomain.de` verwenden (Abschnitt 6). Voraussetzung: Port 80/443 im
 Router auf den Server weiterleiten.
 
@@ -199,7 +199,7 @@ als Subdomain eines eigenen Bereichs anlegen, z. B. `api.meinbot.de`):
 ```bash
 sudo apt install -y cloudflared
 cloudflared tunnel login            # einmalig, öffnet Browser
-cloudflared tunnel create safeword
+cloudflared tunnel create wordlock
 sudo nano /etc/cloudflared/config.yml
 ```
 
@@ -216,7 +216,7 @@ ingress:
 ```bash
 cloudflared tunnel route dns <tunnel-id> api.meinbot.de
 sudo systemctl enable cloudflared
-cloudflared tunnel run safeword
+cloudflared tunnel run wordlock
 ```
 
 Die HTTPS-URL übernimmt dann dieselbe Rolle wie oben `api.deinedomain.de`.
@@ -241,7 +241,7 @@ Port 8000 bleibt lokal — nur Caddy (80/443) wird nach außen freigegeben.
   `DEPLOY_WEBHOOK_URL` optional einen CI-Hook (z. B. Vercel Deploy Hook)
   anstoßen.
 - **Backup:** PostgreSQL-Volume sichern
-  (`docker compose exec db pg_dump -U safeword safeword > backup.sql`).
+  (`docker compose exec db pg_dump -U wordlock wordlock > backup.sql`).
 
 ## Fehlerbehebung
 

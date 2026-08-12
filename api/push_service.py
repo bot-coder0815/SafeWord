@@ -1,4 +1,4 @@
-"""Web Push (VAPID) delivery for SafeWord security incidents.
+"""Web Push (VAPID) delivery for WordLock security incidents.
 
 The API polls for unprocessed incidents and sends a push notification to every
 browser that subscribed via the dashboard (PWA on Android home screen).
@@ -13,11 +13,11 @@ from typing import Any, Dict, Optional
 
 from .database import Database
 
-log = logging.getLogger("safeword.api.push")
+log = logging.getLogger("wordlock.api.push")
 
 VAPID_PUBLIC_KEY = os.environ.get("VAPID_PUBLIC_KEY", "")
 VAPID_PRIVATE_KEY = os.environ.get("VAPID_PRIVATE_KEY", "")
-VAPID_SUBJECT = os.environ.get("VAPID_SUBJECT", "mailto:dev@safeword.example")
+VAPID_SUBJECT = os.environ.get("VAPID_SUBJECT", "mailto:dev@wordlock.example")
 
 
 def push_configured() -> bool:
@@ -45,7 +45,7 @@ async def send_incident_push(db: Database, incident: Dict[str, Any], guild_name:
     if kind == "bot_removed":
         log.info("No push for incident kind 'bot_removed' (bot was removed normally)")
         return
-    title = "🛡️ SafeWord Sicherheitsalarm"
+    title = "🛡️ WordLock Sicherheitsalarm"
     body = (
         f"{guild_name}: {labels.get(kind, kind)}. "
         f"Bot wurde für diesen Server deaktiviert (Selbstschutz)."
@@ -113,7 +113,7 @@ async def send_test_push(db: Database, user_id: int) -> int:
         return 0
 
     payload = {
-        "title": "✅ SafeWord test notification",
+        "title": "✅ WordLock test notification",
         "body": "Push-Notifications funktionieren. 🎉",
         "icon": "/icon-192.png",
         "url": "/",
@@ -144,7 +144,7 @@ async def send_test_push(db: Database, user_id: int) -> int:
 
 
 async def send_test_push_all_admins(db: Database) -> int:
-    """Send a test notification to every SafeWord staff member's devices.
+    """Send a test notification to every WordLock staff member's devices.
 
     Returns the number of subscriptions the notification was sent to.
     """
@@ -161,7 +161,7 @@ async def send_test_push_all_admins(db: Database) -> int:
         return 0
 
     payload = {
-        "title": "✅ SafeWord Admin-Test",
+        "title": "✅ WordLock Admin-Test",
         "body": "Test-Push an alle Admin-Geräte wurde zugestellt. 🎉",
         "icon": "/icon-192.png",
         "url": "/admin",

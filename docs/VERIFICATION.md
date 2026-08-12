@@ -1,6 +1,6 @@
 # Discord-Verifizierung & Listung
 
-SafeWord ist so gebaut, dass es die Voraussetzungen für eine öffentliche
+WordLock ist so gebaut, dass es die Voraussetzungen für eine öffentliche
 Listung und Verifizierung bei Discord erfüllt. Diese Checkliste zeigt die
 Schritte.
 

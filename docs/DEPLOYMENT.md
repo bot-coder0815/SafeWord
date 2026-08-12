@@ -1,6 +1,6 @@
 # Deployment
 
-SafeWord besteht aus drei Teilen, die unabhängig voneinander gehostet werden
+WordLock besteht aus drei Teilen, die unabhängig voneinander gehostet werden
 können: **Dashboard** (Vercel), **API** (Docker) und **Bot** (Docker), dazu eine
 **PostgreSQL-Datenbank**.
 
@@ -37,11 +37,11 @@ Das Schema wird beim ersten Start von Bot und API automatisch angelegt.
 ## 2. Bot (Docker)
 
 ```bash
-docker build -f Dockerfile.bot -t safeword-bot .
-docker run -d --name safeword-bot \
+docker build -f Dockerfile.bot -t wordlock-bot .
+docker run -d --name wordlock-bot \
   --env-file .env \
-  -e DATABASE_URL=postgresql://user:pass@db-host:5432/safeword \
-  safeword-bot
+  -e DATABASE_URL=postgresql://user:pass@db-host:5432/wordlock \
+  wordlock-bot
 ```
 
 Der Bot verbindet sich mit dem Discord Gateway, synchronisiert Slash-Commands
@@ -50,18 +50,18 @@ und meldet sich in `servers`-Tabelle an, sobald er auf einem Server ist.
 ## 3. API (Docker)
 
 ```bash
-docker build -f Dockerfile.api -t safeword-api .
-docker run -d --name safeword-api -p 8000:8000 --env-file .env safeword-api
+docker build -f Dockerfile.api -t wordlock-api .
+docker run -d --name wordlock-api -p 8000:8000 --env-file .env wordlock-api
 ```
 
 Wichtig für die API:
 
 - `DISCORD_REDIRECT_URI` auf die **Dashboard-URL** zeigen lassen (z. B.
-  `https://safeword.vercel.app/api/auth/callback`). Das Dashboard leitet
+  `https://wordlock.vercel.app/api/auth/callback`). Das Dashboard leitet
   `/api/*` serverseitig an die API weiter; nur so landet der Login-Cookie
   auf dem Dashboard-Host.
 - `DASHBOARD_URL` auf die Dashboard-URL zeigen lassen (z. B.
-  `https://safeword.vercel.app`) — dorthin leitet die API nach dem Login.
+  `https://wordlock.vercel.app`) — dorthin leitet die API nach dem Login.
 - `CORS_ORIGINS` auf die Dashboard-URL setzen
 - `COOKIE_SECURE=true` in Produktion
 - `JWT_SECRET` = langes, zufälliges Secret

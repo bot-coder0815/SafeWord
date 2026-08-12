@@ -154,7 +154,7 @@ export default function GuildSettings() {
                 <button
                   onClick={() => toggle(a.key)}
                   className={`relative h-6 w-11 rounded-full transition ${
-                    cfg[a.key] ? "bg-safeword-green" : "bg-white/10"
+                    cfg[a.key] ? "bg-wordlock-green" : "bg-white/10"
                   }`}
                   aria-label={a.label}
                 >

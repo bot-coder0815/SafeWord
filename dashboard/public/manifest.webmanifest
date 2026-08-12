@@ -1,7 +1,7 @@
 {
-  "name": "SafeWord Dashboard",
-  "short_name": "SafeWord",
-  "description": "SafeWord — Discord Moderation Dashboard",
+  "name": "WordLock Dashboard",
+  "short_name": "WordLock",
+  "description": "WordLock — Discord Moderation Dashboard",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

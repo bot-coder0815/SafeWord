@@ -689,7 +689,7 @@ class Database:
         )
 
     async def admin_push_subscriptions(self) -> List[dict]:
-        """All push subscriptions belonging to SafeWord staff (owner/developer/moderator)."""
+        """All push subscriptions belonging to WordLock staff (owner/developer/moderator)."""
         return await self._fetch(
             "SELECT ps.* FROM push_subscriptions ps "
             "JOIN users u ON u.discord_id = ps.user_id "

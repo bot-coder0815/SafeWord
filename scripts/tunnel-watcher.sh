@@ -14,7 +14,7 @@ FILE="${REPO_FILE:-config/instance-url.json}"
 : "${REPO_URL:?REPO_URL is required (e.g. https://github.com/user/repo.git)}"
 : "${GITHUB_TOKEN:?GITHUB_TOKEN is required}"
 
-GIT_USER_NAME="${GIT_USER_NAME:-safeword-tunnel-watcher}"
+GIT_USER_NAME="${GIT_USER_NAME:-wordlock-tunnel-watcher}"
 GIT_USER_EMAIL="${GIT_USER_EMAIL:-tunnel-watcher@users.noreply.github.com}"
 
 AUTH_URL="https://x-access-token:${GITHUB_TOKEN}@${REPO_URL#https://}"

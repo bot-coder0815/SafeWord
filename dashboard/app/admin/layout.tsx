@@ -70,13 +70,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const roleBadge =
     role === "owner" ? (
-      <span className="badge bg-safeword-red/15 text-safeword-red">
+      <span className="badge bg-wordlock-red/15 text-wordlock-red">
         <ShieldCheck className="h-3 w-3" /> Owner
       </span>
     ) : role === "developer" ? (
       <span className="badge bg-blurple/15 text-blurple">Developer</span>
     ) : (
-      <span className="badge bg-safeword-green/15 text-safeword-green">Moderator</span>
+      <span className="badge bg-wordlock-green/15 text-wordlock-green">Moderator</span>
     );
 
   const extra = (
@@ -90,7 +90,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {t("push.testAll")}
       </button>
       {pushMsg && (
-        <div className="mx-3 rounded-lg bg-safeword-green/10 px-3 py-2 text-xs text-safeword-green">
+        <div className="mx-3 rounded-lg bg-wordlock-green/10 px-3 py-2 text-xs text-wordlock-green">
           {pushMsg}
         </div>
       )}

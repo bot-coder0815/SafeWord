@@ -91,7 +91,7 @@ export function TopWordsList({ data }: { data: { matched_word: string; count: nu
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-white/5">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blurple to-safeword-pink"
+              className="h-full rounded-full bg-gradient-to-r from-blurple to-wordlock-pink"
               style={{ width: `${(d.count / max) * 100}%` }}
             />
           </div>

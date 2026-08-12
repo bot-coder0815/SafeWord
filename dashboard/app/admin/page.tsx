@@ -18,7 +18,7 @@ export default function AdminOverview() {
   if (!data) return <p className="text-gray-400">{t("adminOv.loading")}</p>;
 
   const statusDot = (s: string) => (
-    <span className={`inline-block h-2.5 w-2.5 rounded-full ${s === "online" || s === "connected" ? "bg-safeword-green" : "bg-safeword-red"}`} />
+    <span className={`inline-block h-2.5 w-2.5 rounded-full ${s === "online" || s === "connected" ? "bg-wordlock-green" : "bg-wordlock-red"}`} />
   );
 
   return (
@@ -50,7 +50,7 @@ export default function AdminOverview() {
       </header>
 
       {data.maintenance_mode && (
-        <div className="rounded-xl border border-safeword-yellow/40 bg-safeword-yellow/10 p-4 text-sm text-safeword-yellow">
+        <div className="rounded-xl border border-wordlock-yellow/40 bg-wordlock-yellow/10 p-4 text-sm text-wordlock-yellow">
           {t("adminOv.maintenance")}
         </div>
       )}

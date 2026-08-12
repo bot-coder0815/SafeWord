@@ -1,9 +1,9 @@
-# SafeWord
+# WordLock
 
 > Professioneller Discord-Moderation-Bot für automatische Wortfilterung,
 > Beleidigungserkennung und Community-Sicherheit.
 
-SafeWord analysiert Nachrichten in Echtzeit, erkennt Schimpfwörter, Beleidigungen,
+WordLock analysiert Nachrichten in Echtzeit, erkennt Schimpfwörter, Beleidigungen,
 toxische Begriffe, Spam und benutzerdefinierte verbotene Wörter — selbst dann,
 wenn der Absender versucht, den Filter zu umgehen.
 
@@ -44,7 +44,7 @@ wenn der Absender versucht, den Filter zu umgehen.
 ## Architektur
 
 ```
-SafeWord/
+WordLock/
 ├── bot/                    # Discord-Bot (Python, discord.py)
 │   ├── main.py             # Einstiegspunkt
 │   ├── filter_engine.py    # Normalisierung + Aho-Corasick + Tier-Matching
@@ -141,11 +141,11 @@ Eigener Server (Home Lab / VPS): [docs/HOMESERVER.md](docs/HOMESERVER.md)
 
 ## Discord-Verifizierung
 
-SafeWord ist auf Verifizierung & Listung ausgelegt
+WordLock ist auf Verifizierung & Listung ausgelegt
 (öffentliche Webseite, OAuth2-Login, Datenschutzerklärung, Datenlöschung,
 Wartung über den Adminbereich). Vorbereitung: [docs/VERIFICATION.md](docs/VERIFICATION.md)
 
 ## Lizenz
 
-Nur für den Einsatz mit einem eigenen SafeWord-Bot. Das Projekt ist als
+Nur für den Einsatz mit einem eigenen WordLock-Bot. Das Projekt ist als
 Ausgangsbasis für einen professionellen Discord-Moderation-Bot gedacht.

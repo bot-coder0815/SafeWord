@@ -1,4 +1,4 @@
-"""PostgreSQL access for the SafeWord bot (asyncpg)."""
+"""PostgreSQL access for the WordLock bot (asyncpg)."""
 
 from __future__ import annotations
 
@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS standard_word_overrides (
 class Database:
     def __init__(self, dsn: Optional[str] = None):
         self._dsn = dsn or os.environ.get(
-            "DATABASE_URL", "postgresql://safeword:safeword@localhost:5432/safeword"
+            "DATABASE_URL", "postgresql://wordlock:wordlock@localhost:5432/wordlock"
         )
         self._pool: Optional[asyncpg.Pool] = None
 

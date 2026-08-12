@@ -114,7 +114,7 @@ export default function GuildProfile() {
 
       <div className="flex items-center justify-end gap-3">
         {error && <p className="text-sm text-red-400">{error}</p>}
-        {saved && <p className="text-sm text-safeword-green">{t("profile.saved")}</p>}
+        {saved && <p className="text-sm text-wordlock-green">{t("profile.saved")}</p>}
         <button onClick={save} disabled={saving || !avatar} className="btn-primary">
           <Save className="h-4 w-4" />
           {saving ? t("common.loading") : t("profile.saveBtn")}

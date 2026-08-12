@@ -1,4 +1,4 @@
-"""Unit tests for the SafeWord filter engine.
+"""Unit tests for the WordLock filter engine.
 
 Run with:  python -m unittest tests.test_filter_engine
 """

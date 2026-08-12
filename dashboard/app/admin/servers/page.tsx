@@ -7,9 +7,9 @@ import type { AdminServer } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
 
 const STATUS_TONES: Record<string, string> = {
-  active: "bg-safeword-green/15 text-safeword-green",
-  disabled: "bg-safeword-red/15 text-safeword-red",
-  maintenance: "bg-safeword-yellow/15 text-safeword-yellow",
+  active: "bg-wordlock-green/15 text-wordlock-green",
+  disabled: "bg-wordlock-red/15 text-wordlock-red",
+  maintenance: "bg-wordlock-yellow/15 text-wordlock-yellow",
   removed: "bg-white/5 text-gray-400",
 };
 
@@ -151,7 +151,7 @@ export default function AdminServers() {
                     <button
                       onClick={() => toggleBypassPrivileged(s)}
                       className={`relative h-6 w-11 rounded-full transition ${
-                        s.bypass_privileged ? "bg-safeword-green" : "bg-white/10"
+                        s.bypass_privileged ? "bg-wordlock-green" : "bg-white/10"
                       }`}
                       title={t("settings.bypassPrivilegedDesc")}
                       aria-label={t("settings.bypassPrivileged")}
@@ -171,7 +171,7 @@ export default function AdminServers() {
                         title={invites[s.guild_id].url}
                       >
                         {copied === s.guild_id ? (
-                          <Check className="h-3 w-3 shrink-0 text-safeword-green" />
+                          <Check className="h-3 w-3 shrink-0 text-wordlock-green" />
                         ) : (
                           <Copy className="h-3 w-3 shrink-0" />
                         )}

@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Imprint — SafeWord",
-  description: "Imprint for SafeWord.",
+  title: "Imprint — WordLock",
+  description: "Imprint for WordLock.",
 };
 
 export default function ImpressumPage() {
@@ -18,7 +18,7 @@ export default function ImpressumPage() {
         <div className="card">
           <h2 className="text-lg font-semibold text-white">Information in accordance with § 5 DDG</h2>
           <p className="mt-3">
-            SafeWord – Official moderation bot
+            WordLock – Official moderation bot
             <br />
             Owner: <em>[Discord username]</em>
             <br />

@@ -1,4 +1,4 @@
-"""SafeWord Discord bot entry point."""
+"""WordLock Discord bot entry point."""
 
 from __future__ import annotations
 
@@ -13,10 +13,10 @@ from .database import Database
 from .filter_manager import FilterManager
 from .version import __version__
 
-log = logging.getLogger("safeword.bot")
+log = logging.getLogger("wordlock.bot")
 
 
-class SafeWordBot(commands.Bot):
+class WordLockBot(commands.Bot):
     def __init__(self) -> None:
         intents = discord.Intents.default()
         intents.message_content = True
@@ -29,7 +29,7 @@ class SafeWordBot(commands.Bot):
             intents=intents,
             help_command=None,
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name="safewordbot.vercel.app"
+                type=discord.ActivityType.watching, name="wordlockbot.vercel.app"
             ),
         )
         self.version = __version__
@@ -63,7 +63,7 @@ class SafeWordBot(commands.Bot):
                     try:
                         msg = (
                             DISABLED_MSG
-                            if str(error) == "safeword_disabled"
+                            if str(error) == "wordlock_disabled"
                             else (str(error) or "You don't have permission to use this command.")
                         )
                         await interaction.response.send_message(msg, ephemeral=True)
@@ -86,13 +86,13 @@ class SafeWordBot(commands.Bot):
         log.info("Commands synced")
 
     async def _presence_loop(self) -> None:
-        """Keep the activity set to 'safewordbot.vercel.app' at all times."""
+        """Keep the activity set to 'wordlockbot.vercel.app' at all times."""
         await self.wait_until_ready()
         while not self.is_closed():
             try:
                 await self.change_presence(
                     activity=discord.Activity(
-                        type=discord.ActivityType.watching, name="safewordbot.vercel.app"
+                        type=discord.ActivityType.watching, name="wordlockbot.vercel.app"
                     )
                 )
             except Exception:
@@ -171,14 +171,14 @@ class SafeWordBot(commands.Bot):
         is_release = update.get("kind") == "release"
         text = {
             "de": {
-                "announce_title": f"📢 Ankündigung – SafeWord Update {update['version']}",
-                "release_title": f"🚀 SafeWord {update['version']} ist jetzt verfügbar!",
+                "announce_title": f"📢 Ankündigung – WordLock Update {update['version']}",
+                "release_title": f"🚀 WordLock {update['version']} ist jetzt verfügbar!",
                 "changelog": "Änderungen",
                 "maintenance": "⚠️ Wartungsmodus ist aktiv",
             },
             "en": {
-                "announce_title": f"📢 Announcement – SafeWord Update {update['version']}",
-                "release_title": f"🚀 SafeWord {update['version']} is now available!",
+                "announce_title": f"📢 Announcement – WordLock Update {update['version']}",
+                "release_title": f"🚀 WordLock {update['version']} is now available!",
                 "changelog": "Changes",
                 "maintenance": "⚠️ Maintenance mode is active",
             },
@@ -236,7 +236,7 @@ class SafeWordBot(commands.Bot):
         )
         await self.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name="safewordbot.vercel.app"
+                type=discord.ActivityType.watching, name="wordlockbot.vercel.app"
             )
         )
         for guild in self.guilds:
@@ -260,7 +260,7 @@ def main() -> None:
     token = os.environ.get("DISCORD_TOKEN")
     if not token:
         raise SystemExit("DISCORD_TOKEN is not set. Copy .env.example to .env and fill it in.")
-    bot = SafeWordBot()
+    bot = WordLockBot()
     bot.run(token)
 
 

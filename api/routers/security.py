@@ -43,7 +43,7 @@ async def guild_enable(guild_id: int, request: Request):
     db = get_db(request)
     server = await db.get_server(guild_id)
     if not server:
-        raise HTTPException(status_code=404, detail="SafeWord is not on this server")
+        raise HTTPException(status_code=404, detail="WordLock is not on this server")
     await db.update_server(guild_id, status="active")
     resolved = await db.resolve_open_incidents(guild_id)
     await db.add_log(
@@ -156,7 +156,7 @@ async def push_test(request: Request):
 
 @router.post("/api/admin/push/test")
 async def admin_push_test(request: Request, _user=Depends(auth.require_admin)):
-    """Send a test push notification to every SafeWord admin device."""
+    """Send a test push notification to every WordLock admin device."""
     db = get_db(request)
     sent = await push_service.send_test_push_all_admins(db)
     if sent == 0:

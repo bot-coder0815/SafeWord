@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# SafeWord – Startskript für den VPS/Home-Server.
+# WordLock – Startskript für den VPS/Home-Server.
 #
 # Startet die PostgreSQL-Datenbank, die API und den Bot als Docker-Container
 # (alles AUSSER dem Dashboard, das auf Vercel läuft).

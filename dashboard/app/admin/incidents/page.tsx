@@ -57,7 +57,7 @@ export default function AdminIncidents() {
       <header className="flex items-center justify-between">
         <div>
           <h1 className="flex items-center gap-2 text-3xl font-bold text-white">
-            <ShieldAlert className="h-7 w-7 text-safeword-red" /> {t("security.title")}
+            <ShieldAlert className="h-7 w-7 text-wordlock-red" /> {t("security.title")}
           </h1>
           <p className="mt-1 text-sm text-gray-400">{t("security.subtitle")}</p>
         </div>
@@ -82,8 +82,8 @@ export default function AdminIncidents() {
                 <span
                   className={`badge ${
                     inc.status === "open"
-                      ? "bg-safeword-red/15 text-safeword-red"
-                      : "bg-safeword-green/15 text-safeword-green"
+                      ? "bg-wordlock-red/15 text-wordlock-red"
+                      : "bg-wordlock-green/15 text-wordlock-green"
                   }`}
                 >
                   {inc.status === "open" ? t("security.open") : t("security.resolved")}

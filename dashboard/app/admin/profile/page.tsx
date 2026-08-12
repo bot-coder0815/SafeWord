@@ -84,7 +84,7 @@ export default function AdminProfile() {
       </header>
 
       {error && (
-        <div className="flex items-center gap-2 rounded-lg bg-safeword-red/15 px-4 py-3 text-sm text-red-300">
+        <div className="flex items-center gap-2 rounded-lg bg-wordlock-red/15 px-4 py-3 text-sm text-red-300">
           <AlertTriangle className="h-4 w-4" />
           {error}
         </div>

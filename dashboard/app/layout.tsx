@@ -6,13 +6,13 @@ import { Providers } from "./providers";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "SafeWord",
+  title: "WordLock",
   description:
-    "SafeWord — Automatische Wortfilterung, Beleidigungserkennung und Community-Sicherheit für deinen Discord Server.",
+    "WordLock — Automatische Wortfilterung, Beleidigungserkennung und Community-Sicherheit für deinen Discord Server.",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "SafeWord",
+    title: "WordLock",
     statusBarStyle: "black-translucent",
   },
 };

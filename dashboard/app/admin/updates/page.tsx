@@ -118,7 +118,7 @@ export default function AdminUpdates() {
                   <span className="font-semibold text-white">{u.version}</span>
                   <div className="flex items-center gap-2">
                     {u.maintenance_mode && (
-                      <span className="badge bg-safeword-yellow/15 text-safeword-yellow">
+                      <span className="badge bg-wordlock-yellow/15 text-wordlock-yellow">
                         {t("adUpd.maintenanceBadge")}
                       </span>
                     )}

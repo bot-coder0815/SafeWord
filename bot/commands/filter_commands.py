@@ -16,7 +16,7 @@ def manage_guild():
             raise app_commands.NoPrivateMessage()
         server = await interaction.client.db.get_server(interaction.guild_id)
         if server and server.get("status") == "disabled":
-            raise app_commands.CheckFailure("safeword_disabled")
+            raise app_commands.CheckFailure("wordlock_disabled")
         member = interaction.user
         if member.id in interaction.client.owner_ids:
             return True

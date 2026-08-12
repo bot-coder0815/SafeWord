@@ -485,7 +485,7 @@ async def admin_profile_apply(payload: dict, request: Request, _user=Depends(aut
 
 @router.post("/profile/reset")
 async def admin_profile_reset(request: Request, _user=Depends(auth.require_owner)):
-    """Reset the bot avatar back to the SafeWord default (no picture)."""
+    """Reset the bot avatar back to the WordLock default (no picture)."""
     db = get_db(request)
     stored = await profile_service.apply_and_store(db, None, _user["discord_id"])
     return {"ok": True, "avatar": stored.get("avatar")}

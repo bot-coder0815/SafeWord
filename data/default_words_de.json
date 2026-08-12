@@ -3,7 +3,7 @@
     "language": "de",
     "name": "German Basic",
     "version": "1.0.0",
-    "description": "Offizielle deutsche Standardwortliste. Wird vom SafeWord Entwicklerteam gepflegt."
+    "description": "Offizielle deutsche Standardwortliste. Wird vom WordLock Entwicklerteam gepflegt."
   },
   "words": [
     { "word": "arsch", "category": "insult", "severity": 3, "description": "Beleidigung" },

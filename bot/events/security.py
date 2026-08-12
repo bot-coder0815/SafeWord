@@ -19,7 +19,7 @@ from discord.ext import commands
 
 from ..version import __version__
 
-log = logging.getLogger("safeword.bot.security")
+log = logging.getLogger("wordlock.bot.security")
 
 # Detection thresholds (per guild, per window).
 COMMAND_FLOOD_LIMIT = 5       # slash commands within …
@@ -38,7 +38,7 @@ INCIDENT_LABELS: Dict[str, str] = {
 }
 
 DISABLED_MSG = (
-    "🛡️ SafeWord is disabled for this server (self-protection). "
+    "🛡️ WordLock is disabled for this server (self-protection). "
     "Please re-enable it in the dashboard."
 )
 
@@ -54,7 +54,7 @@ def guild_active() -> app_commands.Check:
         except Exception:
             return True
         if server and server.get("status") == "disabled":
-            raise app_commands.CheckFailure("safeword_disabled")
+            raise app_commands.CheckFailure("wordlock_disabled")
         return True
 
     return app_commands.check(predicate)
@@ -114,7 +114,7 @@ class SecurityEvents(commands.Cog):
             return
 
         consequence = (
-            "SafeWord disabled itself for this server (self-protection). "
+            "WordLock disabled itself for this server (self-protection). "
             "Message and command processing was stopped. "
             "An administrator must re-enable the bot via the dashboard."
         )
@@ -165,7 +165,7 @@ class SecurityEvents(commands.Cog):
                 inline=True,
             )
         embed.add_field(name="Consequence", value=consequence, inline=False)
-        embed.set_footer(text=f"SafeWord v{__version__} • Self-protection active")
+        embed.set_footer(text=f"WordLock v{__version__} • Self-protection active")
 
         channel: Optional[discord.TextChannel] = None
         try:

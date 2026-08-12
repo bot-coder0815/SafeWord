@@ -1,4 +1,4 @@
-"""Unit tests for the SafeWord self-protection / anti-nuke detection.
+"""Unit tests for the WordLock self-protection / anti-nuke detection.
 
 Run with:  python -m unittest tests.test_security
 """

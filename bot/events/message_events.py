@@ -11,7 +11,7 @@ from discord.ext import commands
 
 from ..version import __version__
 
-log = logging.getLogger("safeword.bot.events")
+log = logging.getLogger("wordlock.bot.events")
 
 ACTION_LABELS = {
     "delete": "Message deleted",
@@ -111,13 +111,13 @@ class MessageEvents(commands.Cog):
         lang = "de" if server.get("language") == "de" else "en"
         text = {
             "de": (
-                "⚠️ **SafeWord hat nicht die Administrator-Berechtigung!**\n"
+                "⚠️ **WordLock hat nicht die Administrator-Berechtigung!**\n"
                 "Ohne diese Berechtigung kann der Filter Nachrichten nicht zuverlässig "
                 "löschen, verwarnen oder zeitweilig stummschalten. Bitte den Bot mit "
                 "der Administrator-Berechtigung neu einladen."
             ),
             "en": (
-                "⚠️ **SafeWord is missing the Administrator permission!**\n"
+                "⚠️ **WordLock is missing the Administrator permission!**\n"
                 "Without it the filter cannot reliably delete, warn or timeout messages. "
                 "Please re-invite the bot with the Administrator permission."
             ),
@@ -240,7 +240,7 @@ class MessageEvents(commands.Cog):
                         await member.timeout(
                             discord.utils.utcnow()
                             + datetime.timedelta(minutes=minutes),
-                            reason=f"SafeWord: {entry.word} ({entry.category})",
+                            reason=f"WordLock: {entry.word} ({entry.category})",
                         )
                         executed.append("timeout")
                     except discord.HTTPException:
@@ -329,9 +329,9 @@ class MessageEvents(commands.Cog):
     async def _dm_warning(self, author: discord.User, entry) -> None:
         try:
             embed = discord.Embed(
-                title="SafeWord",
+                title="WordLock",
                 description=(
-                    f"Your message on a server was filtered by SafeWord. "
+                    f"Your message on a server was filtered by WordLock. "
                     f"Detected: `{entry.word}` (category: {entry.category})."
                 ),
                 color=0xED4245,
@@ -363,7 +363,7 @@ class MessageEvents(commands.Cog):
             value=(message.content[:1000] or "*no text*"),
             inline=False,
         )
-        embed.set_footer(text=f"SafeWord v{__version__} • User ID: {message.author.id}")
+        embed.set_footer(text=f"WordLock v{__version__} • User ID: {message.author.id}")
         try:
             await channel.send(embed=embed)
         except discord.HTTPException:

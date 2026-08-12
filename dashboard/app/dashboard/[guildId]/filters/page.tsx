@@ -153,8 +153,8 @@ export default function GuildFilters() {
         <div
           className={`rounded-lg px-4 py-3 text-sm ${
             msg.ok
-              ? "bg-safeword-green/10 text-safeword-green"
-              : "bg-safeword-red/10 text-safeword-red"
+              ? "bg-wordlock-green/10 text-wordlock-green"
+              : "bg-wordlock-red/10 text-wordlock-red"
           }`}
         >
           {msg.text}
@@ -254,7 +254,7 @@ export default function GuildFilters() {
                     <td className="py-3 capitalize text-gray-300">{w.action}</td>
                     <td className="py-3">
                       <div className="flex items-center justify-end gap-2">
-                        <span className={`badge ${w.enabled ? "bg-safeword-green/10 text-safeword-green" : "bg-white/5 text-gray-400"}`}>
+                        <span className={`badge ${w.enabled ? "bg-wordlock-green/10 text-wordlock-green" : "bg-white/5 text-gray-400"}`}>
                           {w.enabled ? t("common.active") : t("common.off")}
                         </span>
                         <button
@@ -409,7 +409,7 @@ export default function GuildFilters() {
                 onClick={() => toggleList(l.language, !defaultLists[l.language])}
                 className={`badge cursor-pointer px-3 py-1 ${
                   defaultLists[l.language]
-                    ? "bg-safeword-green/15 text-safeword-green"
+                    ? "bg-wordlock-green/15 text-wordlock-green"
                     : "bg-white/5 text-gray-400"
                 }`}
               >

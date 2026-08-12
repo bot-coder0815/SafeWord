@@ -83,7 +83,7 @@ export default function AdminLists() {
         <p className="mt-1 text-sm text-gray-400">{t("adLists.subtitle")}</p>
       </header>
 
-      {msg && <div className="rounded-lg bg-safeword-green/10 px-4 py-3 text-sm text-safeword-green">{msg}</div>}
+      {msg && <div className="rounded-lg bg-wordlock-green/10 px-4 py-3 text-sm text-wordlock-green">{msg}</div>}
 
       <div className="grid gap-6 lg:grid-cols-4">
         <div className="space-y-3 lg:col-span-1">

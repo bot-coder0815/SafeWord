@@ -85,7 +85,7 @@ export default function LandingPage() {
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2 text-xl font-bold text-white">
           <Shield className="h-7 w-7 text-blurple" />
-          SafeWord
+          WordLock
         </div>
         <div className="flex items-center gap-3">
           <a href="#team" className="hidden text-sm font-medium text-gray-300 transition hover:text-white sm:block">
@@ -106,7 +106,7 @@ export default function LandingPage() {
       <section className="mx-auto max-w-4xl px-6 pb-24 pt-16 text-center">
         <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl">
           {t("landing.hero1")}{" "}
-          <span className="bg-gradient-to-r from-blurple to-safeword-pink bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blurple to-wordlock-pink bg-clip-text text-transparent">
             {t("landing.hero2")}
           </span>
         </h1>
@@ -165,7 +165,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-white/5 py-8 text-center text-sm text-gray-500">
         <p>
-          SafeWord • {t("landing.footer")} • {t("landing.footerVersion")}
+          WordLock • {t("landing.footer")} • {t("landing.footerVersion")}
         </p>
         <p className="mt-2">{t("landing.copyright")}</p>
         <nav className="mt-4 flex justify-center gap-6">

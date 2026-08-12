@@ -42,7 +42,7 @@ async def get_profile(request: Request):
 
 @router.post("/profile/apply")
 async def apply_profile(payload: dict, request: Request):
-    """Set the bot avatar (guild admin of a server where SafeWord is active)."""
+    """Set the bot avatar (guild admin of a server where WordLock is active)."""
     guild_id = int(payload.get("guild_id") or 0)
     if not guild_id:
         raise HTTPException(status_code=400, detail="guild_id is required")
@@ -50,7 +50,7 @@ async def apply_profile(payload: dict, request: Request):
     db = get_db(request)
     server = await db.get_server(guild_id)
     if not server:
-        raise HTTPException(status_code=404, detail="SafeWord is not on this server")
+        raise HTTPException(status_code=404, detail="WordLock is not on this server")
 
     avatar = payload.get("avatar")
     if not avatar:

@@ -1,4 +1,4 @@
-"""External webhooks for the SafeWord bot.
+"""External webhooks for the WordLock bot.
 
 Currently: bot avatar changes via a secret-protected webhook
 (``AVATAR_WEBHOOK_SECRET``). Useful to sync the bot's profile picture from

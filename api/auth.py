@@ -1,4 +1,4 @@
-"""Discord OAuth2 login + JWT session handling for the SafeWord API."""
+"""Discord OAuth2 login + JWT session handling for the WordLock API."""
 
 from __future__ import annotations
 
@@ -120,7 +120,7 @@ def decode_session_token(token: str) -> Optional[int]:
 
 def set_session_cookie(response: Response, token: str) -> None:
     response.set_cookie(
-        "safeword_session",
+        "wordlock_session",
         token,
         httponly=True,
         secure=COOKIE_SECURE,
@@ -130,7 +130,7 @@ def set_session_cookie(response: Response, token: str) -> None:
 
 
 def clear_session_cookie(response: Response) -> None:
-    response.delete_cookie("safeword_session")
+    response.delete_cookie("wordlock_session")
 
 
 # ---------------------------------------------------------------------------
@@ -144,7 +144,7 @@ async def get_db(request: Request):
 
 async def current_user(request: Request):
     """Resolve the logged-in Discord user (or raise 401)."""
-    token = request.cookies.get("safeword_session")
+    token = request.cookies.get("wordlock_session")
     if not token:
         raise HTTPException(status_code=401, detail="Not authenticated")
     discord_id = decode_session_token(token)

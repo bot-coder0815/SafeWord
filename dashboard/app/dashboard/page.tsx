@@ -98,7 +98,7 @@ export default function DashboardHome() {
             {t("dash.adminPanel")}
           </button>
           {adminDenied && (
-            <div className="flex items-center gap-1.5 text-xs text-safeword-red">
+            <div className="flex items-center gap-1.5 text-xs text-wordlock-red">
               <Ban className="h-3 w-3" /> {t("dash.adminDenied")}
             </div>
           )}
@@ -106,7 +106,7 @@ export default function DashboardHome() {
       </header>
 
       {me.maintenance && (
-        <div className="mb-6 rounded-xl border border-safeword-yellow/40 bg-safeword-yellow/10 p-4 text-sm text-safeword-yellow">
+        <div className="mb-6 rounded-xl border border-wordlock-yellow/40 bg-wordlock-yellow/10 p-4 text-sm text-wordlock-yellow">
           {t("dash.maintenance")}
         </div>
       )}
@@ -142,7 +142,7 @@ export default function DashboardHome() {
                       <Users className="h-3 w-3" /> {g.member_count.toLocaleString(locale)}
                     </div>
                     {!g.bot_has_admin && (
-                      <div className="mt-1.5 flex items-center gap-1.5 rounded-md bg-safeword-yellow/10 px-2 py-1 text-xs text-safeword-yellow">
+                      <div className="mt-1.5 flex items-center gap-1.5 rounded-md bg-wordlock-yellow/10 px-2 py-1 text-xs text-wordlock-yellow">
                         <Ban className="h-3 w-3 shrink-0" /> {t("dash.missingAdminPerm")}
                       </div>
                     )}

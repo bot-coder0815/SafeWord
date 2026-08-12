@@ -15,7 +15,7 @@ class SettingsCommands(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @app_commands.command(name="settings", description="Shows the SafeWord settings of this server")
+    @app_commands.command(name="settings", description="Shows the WordLock settings of this server")
     @app_commands.default_permissions(manage_guild=True)
     @guild_active()
     async def settings(self, interaction: discord.Interaction) -> None:
@@ -38,7 +38,7 @@ class SettingsCommands(commands.Cog):
         ]
 
         embed = discord.Embed(
-            title="SafeWord Settings",
+            title="WordLock Settings",
             description=f"**Moderation level:** {server.get('mod_level', 3)}/5\n"
             f"**Language:** {server.get('language', 'en').upper()}\n"
             f"**Log channel:** {('#' + self._channel_name(interaction.guild, server.get('log_channel_id'))) if server.get('log_channel_id') else 'Not set'}\n"
@@ -57,7 +57,7 @@ class SettingsCommands(commands.Cog):
         ch = guild.get_channel(channel_id)
         return ch.name if ch else str(channel_id)
 
-    @app_commands.command(name="settings-set", description="Changes a SafeWord setting")
+    @app_commands.command(name="settings-set", description="Changes a WordLock setting")
     @app_commands.default_permissions(manage_guild=True)
     @guild_active()
     @app_commands.choices(

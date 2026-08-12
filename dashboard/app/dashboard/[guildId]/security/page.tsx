@@ -47,7 +47,7 @@ export default function GuildSecurity() {
     <div className="max-w-4xl space-y-8">
       <header>
         <h1 className="flex items-center gap-2 text-3xl font-bold text-white">
-          <ShieldAlert className="h-7 w-7 text-safeword-red" /> {t("security.title")}
+          <ShieldAlert className="h-7 w-7 text-wordlock-red" /> {t("security.title")}
         </h1>
         <p className="mt-1 text-sm text-gray-400">{t("security.subtitle")}</p>
       </header>
@@ -57,14 +57,14 @@ export default function GuildSecurity() {
       )}
 
       {config?.status === "disabled" && (
-        <div className="rounded-xl border border-safeword-red/40 bg-safeword-red/10 p-5">
+        <div className="rounded-xl border border-wordlock-red/40 bg-wordlock-red/10 p-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <div className="font-semibold text-safeword-red">
+              <div className="font-semibold text-wordlock-red">
                 🛡️ {t("security.disabledBanner")}
               </div>
             </div>
-            <button onClick={reEnable} className="btn-primary !bg-safeword-green">
+            <button onClick={reEnable} className="btn-primary !bg-wordlock-green">
               <Power className="h-4 w-4" /> {t("security.reEnable")}
             </button>
           </div>
@@ -84,8 +84,8 @@ export default function GuildSecurity() {
                 <span
                   className={`badge ${
                     inc.status === "open"
-                      ? "bg-safeword-red/15 text-safeword-red"
-                      : "bg-safeword-green/15 text-safeword-green"
+                      ? "bg-wordlock-red/15 text-wordlock-red"
+                      : "bg-wordlock-green/15 text-wordlock-green"
                   }`}
                 >
                   {inc.status === "open" ? t("security.open") : t("security.resolved")}

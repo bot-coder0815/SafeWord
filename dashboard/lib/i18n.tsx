@@ -46,7 +46,7 @@ const de = {
   "landing.hero1": "Dein Server.",
   "landing.hero2": "Deine Regeln.",
   "landing.tagline":
-    "SafeWord filtert automatisch Schimpfwörter, Beleidigungen, Spam und toxische Begriffe — selbst wenn jemand versucht, den Filter zu umgehen. Professionelle Moderation für deine Community.",
+    "WordLock filtert automatisch Schimpfwörter, Beleidigungen, Spam und toxische Begriffe — selbst wenn jemand versucht, den Filter zu umgehen. Professionelle Moderation für deine Community.",
   "landing.features": "Funktionen",
   "landing.securityNote": "OAuth2 • Keine Passwörter • Nur Server mit deinen Admin-Rechten",
   "landing.feature1.title": "Erweiterte Erkennung",
@@ -63,12 +63,12 @@ const de = {
   "landing.feature6.title": "Professionelles Dashboard",
   "landing.feature6.text": "Verwalte alles über ein modernes Web-Dashboard — inklusive Statistiken und Sicherheitsvorfällen.",
   "landing.team": "Stammbaum",
-  "landing.teamTitle": "Der SafeWord-Stammbaum",
-  "landing.teamSubtitle": "Die Menschen hinter SafeWord und ihre Rollen im Team.",
+  "landing.teamTitle": "Der WordLock-Stammbaum",
+  "landing.teamSubtitle": "Die Menschen hinter WordLock und ihre Rollen im Team.",
   "landing.teamEmpty": "Noch keine Teammitglieder hinterlegt.",
   "landing.footer": "Offizieller Moderation-Bot",
   "landing.footerVersion": "Version 1.0.0",
-  "landing.copyright": "© 2026 SafeWord. Alle Rechte vorbehalten.",
+  "landing.copyright": "© 2026 WordLock. Alle Rechte vorbehalten.",
   "landing.impressum": "Impressum",
   "landing.datenschutz": "Datenschutz",
 
@@ -79,7 +79,7 @@ const de = {
   "dash.adminDenied": "Zugriff verweigert — du bist kein Admin.",
   "dash.maintenance": "Wartungsmodus aktiv — einige Funktionen können vorübergehend eingeschränkt sein.",
   "dash.noServers": "Wir konnten keine Server finden, auf denen du Administrator bist.",
-  "dash.connected": "Mit SafeWord verbunden ({count})",
+  "dash.connected": "Mit WordLock verbunden ({count})",
   "dash.notInstalled": "Noch nicht installiert ({count})",
   "dash.openDashboard": "Dashboard öffnen →",
   "dash.inviteBot": "Bot einladen",
@@ -96,7 +96,7 @@ const de = {
 
   // guild overview
   "overview.loading": "Lade Server-Daten…",
-  "overview.serverIdLine": "Server-ID {id} • Status {status} • SafeWord v{version}",
+  "overview.serverIdLine": "Server-ID {id} • Status {status} • WordLock v{version}",
   "overview.violationsToday": "Verstöße heute",
   "overview.warnings": "Verwarnungen",
   "overview.detectedWords": "Erkannte Begriffe",
@@ -118,7 +118,7 @@ const de = {
   "filters.stdLists": "Standardlisten",
   "filters.stdListActive": "Aktiv",
   "filters.stdListInactive": "Inaktiv",
-  "filters.stdListsNote": "Standardlisten werden vom SafeWord-Team gepflegt und automatisch aktualisiert.",
+  "filters.stdListsNote": "Standardlisten werden vom WordLock-Team gepflegt und automatisch aktualisiert.",
   "filters.stdWords": "Standardwörter ({count})",
   "filters.stdWordsSubtitle": "Einzelne Wörter aus den Standardlisten für diesen Server anpassen.",
   "filters.search": "Suche",
@@ -132,7 +132,7 @@ const de = {
 
   // settings
   "settings.title": "Einstellungen",
-  "settings.subtitle": "Moderationsverhalten von SafeWord.",
+  "settings.subtitle": "Moderationsverhalten von WordLock.",
   "settings.loading": "Lade Einstellungen…",
   "settings.general": "Allgemein",
   "settings.modLevel": "Moderationslevel (1–5)",
@@ -169,7 +169,7 @@ const de = {
   "profile.title": "Bot Profilbild",
   "profile.subtitle": "Das Profilbild des Bots für diesen Server anpassen.",
   "profile.info":
-    "Discord erlaubt pro Bot nur ein globales Profilbild. Dein Upload überschreibt das aktuelle Bild für alle Server (der letzte Upload gewinnt). Bei anstößigen Bildern können die SafeWord-Admins es im Adminbereich ändern oder zurücksetzen. Die Activity bleibt immer „Made by DevCoder“.",
+    "Discord erlaubt pro Bot nur ein globales Profilbild. Dein Upload überschreibt das aktuelle Bild für alle Server (der letzte Upload gewinnt). Bei anstößigen Bildern können die WordLock-Admins es im Adminbereich ändern oder zurücksetzen. Die Activity bleibt immer „Made by DevCoder“.",
   "profile.header": "Profilbild",
   "profile.upload": "Profilbild hochladen",
   "profile.noImage": "Kein Bild",
@@ -186,9 +186,9 @@ const de = {
 
   // security / incidents (guild + admin)
   "security.disabledBanner":
-    "SafeWord wurde für diesen Server deaktiviert (Selbstschutz). Ein Angriffs- oder Nuke-Versuch wurde erkannt und die Verarbeitung gestoppt. Ein Administrator kann den Bot hier wieder aktivieren.",
+    "WordLock wurde für diesen Server deaktiviert (Selbstschutz). Ein Angriffs- oder Nuke-Versuch wurde erkannt und die Verarbeitung gestoppt. Ein Administrator kann den Bot hier wieder aktivieren.",
   "security.reEnable": "Bot wieder aktivieren",
-  "security.reEnableConfirm": "SafeWord für diesen Server wirklich wieder aktivieren?",
+  "security.reEnableConfirm": "WordLock für diesen Server wirklich wieder aktivieren?",
   "security.title": "Sicherheit",
   "security.subtitle": "Angriffs- und Nuke-Versuche, bei denen sich der Bot selbst deaktiviert hat.",
   "security.noIncidents": "Keine Sicherheitsvorfälle.",
@@ -202,7 +202,7 @@ const de = {
   "security.detail": "Details",
   "security.resolve": "Als behoben markieren",
   "security.resolveConfirm": "Diesen Vorfall als behoben markieren?",
-  "security.enabledToast": "SafeWord wurde wieder aktiviert.",
+  "security.enabledToast": "WordLock wurde wieder aktiviert.",
   "security.kind.command_flood": "Befehlsspam (mögliche Manipulation)",
   "security.kind.mention_flood": "Erwähnungs-Flut gegen den Bot",
   "security.kind.channel_nuke": "Massenhafte Kanal-Erstellung/-Löschung (Nuke-Versuch)",
@@ -227,8 +227,8 @@ const de = {
 
   // admin navigation
   "admin.sidebarTitle": "Adminbereich",
-  "admin.sidebarSubtitle": "Nur für SafeWord-Entwickler",
-  "admin.headerLabel": "SafeWord Entwickler-Adminbereich",
+  "admin.sidebarSubtitle": "Nur für WordLock-Entwickler",
+  "admin.headerLabel": "WordLock Entwickler-Adminbereich",
   "admin.overview": "Übersicht",
   "admin.servers": "Server",
   "admin.stats": "Statistiken",
@@ -242,7 +242,7 @@ const de = {
   // admin overview
   "adminOv.loading": "Lade Übersicht…",
   "adminOv.title": "Übersicht",
-  "adminOv.started": "SafeWord v{version} • Gestartet: {date}",
+  "adminOv.started": "WordLock v{version} • Gestartet: {date}",
   "adminOv.bot": "Bot",
   "adminOv.api": "API",
   "adminOv.database": "Datenbank",
@@ -395,7 +395,7 @@ const en: Record<string, string> = {
   "landing.hero1": "Your server.",
   "landing.hero2": "Your rules.",
   "landing.tagline":
-    "SafeWord automatically filters profanity, insults, spam and toxic terms — even when someone tries to bypass the filter. Professional moderation for your community.",
+    "WordLock automatically filters profanity, insults, spam and toxic terms — even when someone tries to bypass the filter. Professional moderation for your community.",
   "landing.features": "Features",
   "landing.securityNote": "OAuth2 • No passwords • Only servers you can manage",
   "landing.feature1.title": "Advanced detection",
@@ -412,12 +412,12 @@ const en: Record<string, string> = {
   "landing.feature6.title": "Professional dashboard",
   "landing.feature6.text": "Manage everything through a modern web dashboard — including statistics and security incidents.",
   "landing.team": "Family tree",
-  "landing.teamTitle": "The SafeWord family tree",
-  "landing.teamSubtitle": "The people behind SafeWord and their roles in the team.",
+  "landing.teamTitle": "The WordLock family tree",
+  "landing.teamSubtitle": "The people behind WordLock and their roles in the team.",
   "landing.teamEmpty": "No team members yet.",
   "landing.footer": "Official moderation bot",
   "landing.footerVersion": "Version 1.0.0",
-  "landing.copyright": "© 2026 SafeWord. All rights reserved.",
+  "landing.copyright": "© 2026 WordLock. All rights reserved.",
   "landing.impressum": "Imprint",
   "landing.datenschutz": "Privacy Policy",
 
@@ -428,7 +428,7 @@ const en: Record<string, string> = {
   "dash.adminDenied": "Access denied — you are not an admin.",
   "dash.maintenance": "Maintenance mode is active — some features may be temporarily limited.",
   "dash.noServers": "We couldn't find any servers where you are an administrator.",
-  "dash.connected": "Connected with SafeWord ({count})",
+  "dash.connected": "Connected with WordLock ({count})",
   "dash.notInstalled": "Not installed yet ({count})",
   "dash.openDashboard": "Open dashboard →",
   "dash.inviteBot": "Invite bot",
@@ -445,7 +445,7 @@ const en: Record<string, string> = {
 
   // guild overview
   "overview.loading": "Loading server data…",
-  "overview.serverIdLine": "Server ID {id} • Status {status} • SafeWord v{version}",
+  "overview.serverIdLine": "Server ID {id} • Status {status} • WordLock v{version}",
   "overview.violationsToday": "Violations today",
   "overview.warnings": "Warnings",
   "overview.detectedWords": "Detected words",
@@ -467,7 +467,7 @@ const en: Record<string, string> = {
   "filters.stdLists": "Default lists",
   "filters.stdListActive": "Active",
   "filters.stdListInactive": "Inactive",
-  "filters.stdListsNote": "Default lists are maintained by the SafeWord team and updated automatically.",
+  "filters.stdListsNote": "Default lists are maintained by the WordLock team and updated automatically.",
   "filters.stdWords": "Default words ({count})",
   "filters.stdWordsSubtitle": "Adjust individual words from the default lists for this server.",
   "filters.search": "Search",
@@ -481,7 +481,7 @@ const en: Record<string, string> = {
 
   // settings
   "settings.title": "Settings",
-  "settings.subtitle": "SafeWord moderation behavior.",
+  "settings.subtitle": "WordLock moderation behavior.",
   "settings.loading": "Loading settings…",
   "settings.general": "General",
   "settings.modLevel": "Moderation level (1–5)",
@@ -518,7 +518,7 @@ const en: Record<string, string> = {
   "profile.title": "Bot profile picture",
   "profile.subtitle": "Customize the bot's profile picture for this server.",
   "profile.info":
-    "Discord allows only one global profile picture per bot. Your upload overwrites the current image for all servers (last upload wins). For inappropriate images, SafeWord admins can change or reset it from the admin area. The activity always stays \"Made by DevCoder\".",
+    "Discord allows only one global profile picture per bot. Your upload overwrites the current image for all servers (last upload wins). For inappropriate images, WordLock admins can change or reset it from the admin area. The activity always stays \"Made by DevCoder\".",
   "profile.header": "Profile picture",
   "profile.upload": "Upload profile picture",
   "profile.noImage": "No image",
@@ -535,9 +535,9 @@ const en: Record<string, string> = {
 
   // security / incidents (guild + admin)
   "security.disabledBanner":
-    "SafeWord was disabled for this server (self-protection). An attack or nuke attempt was detected and processing was stopped. An administrator can re-enable the bot here.",
+    "WordLock was disabled for this server (self-protection). An attack or nuke attempt was detected and processing was stopped. An administrator can re-enable the bot here.",
   "security.reEnable": "Re-enable bot",
-  "security.reEnableConfirm": "Really re-enable SafeWord for this server?",
+  "security.reEnableConfirm": "Really re-enable WordLock for this server?",
   "security.title": "Security",
   "security.subtitle": "Attack and nuke attempts where the bot disabled itself.",
   "security.noIncidents": "No security incidents.",
@@ -551,7 +551,7 @@ const en: Record<string, string> = {
   "security.detail": "Details",
   "security.resolve": "Mark as resolved",
   "security.resolveConfirm": "Mark this incident as resolved?",
-  "security.enabledToast": "SafeWord was re-enabled.",
+  "security.enabledToast": "WordLock was re-enabled.",
   "security.kind.command_flood": "Command flood (possible manipulation)",
   "security.kind.mention_flood": "Mention flood against the bot",
   "security.kind.channel_nuke": "Mass channel creation/deletion (nuke attempt)",
@@ -576,8 +576,8 @@ const en: Record<string, string> = {
 
   // admin navigation
   "admin.sidebarTitle": "Admin area",
-  "admin.sidebarSubtitle": "SafeWord staff only",
-  "admin.headerLabel": "SafeWord Developer Admin Area",
+  "admin.sidebarSubtitle": "WordLock staff only",
+  "admin.headerLabel": "WordLock Developer Admin Area",
   "admin.overview": "Overview",
   "admin.servers": "Servers",
   "admin.stats": "Statistics",
@@ -591,7 +591,7 @@ const en: Record<string, string> = {
   // admin overview
   "adminOv.loading": "Loading overview…",
   "adminOv.title": "Overview",
-  "adminOv.started": "SafeWord v{version} • Started: {date}",
+  "adminOv.started": "WordLock v{version} • Started: {date}",
   "adminOv.bot": "Bot",
   "adminOv.api": "API",
   "adminOv.database": "Database",
@@ -711,7 +711,7 @@ const en: Record<string, string> = {
 
 const translations: Record<Lang, Record<string, string>> = { de, en };
 
-const STORAGE_KEY = "safeword_lang";
+const STORAGE_KEY = "wordlock_lang";
 
 export function urlSafeBase64ToUint8Array(base64: string): Uint8Array<ArrayBuffer> {
   const padding = "=".repeat((4 - (base64.length % 4)) % 4);

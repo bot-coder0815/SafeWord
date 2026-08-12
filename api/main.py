@@ -1,4 +1,4 @@
-"""FastAPI entry point for the SafeWord dashboard backend."""
+"""FastAPI entry point for the WordLock dashboard backend."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from .database import Database
 from .routers import admin, dashboard, profile, security, webhook
 from .version import __version__
 
-log = logging.getLogger("safeword.api")
+log = logging.getLogger("wordlock.api")
 
 PUSH_POLL_SECONDS = int(os.environ.get("PUSH_POLL_SECONDS", "20"))
 
@@ -69,13 +69,13 @@ async def _push_poll_loop(db: Database) -> None:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     dsn = os.environ.get(
-        "DATABASE_URL", "postgresql://safeword:safeword@localhost:5432/safeword"
+        "DATABASE_URL", "postgresql://wordlock:wordlock@localhost:5432/wordlock"
     )
     db = Database(dsn)
     await db.connect()
     app.state.db = db
     app.state.started_at = datetime.now(timezone.utc).isoformat()
-    log.info("SafeWord API v%s connected to database", __version__)
+    log.info("WordLock API v%s connected to database", __version__)
     poller = asyncio.create_task(_push_poll_loop(db))
     try:
         yield
@@ -89,8 +89,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="SafeWord API",
-    description="Backend for the SafeWord Discord moderation dashboard.",
+    title="WordLock API",
+    description="Backend for the WordLock Discord moderation dashboard.",
     version=__version__,
     lifespan=lifespan,
     default_response_class=SafeJSONResponse,
@@ -120,7 +120,7 @@ app.include_router(webhook.router)
 
 @app.get("/")
 async def root() -> dict:
-    return {"name": "SafeWord API", "version": __version__, "docs": "/docs"}
+    return {"name": "WordLock API", "version": __version__, "docs": "/docs"}
 
 
 @app.get("/api/health")

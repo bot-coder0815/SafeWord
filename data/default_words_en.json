@@ -3,7 +3,7 @@
     "language": "en",
     "name": "English Basic",
     "version": "1.0.0",
-    "description": "Official English standard word list. Maintained by the SafeWord developer team."
+    "description": "Official English standard word list. Maintained by the WordLock developer team."
   },
   "words": [
     { "word": "idiot", "category": "insult", "severity": 2, "description": "Insult" },

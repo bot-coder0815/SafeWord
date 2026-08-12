@@ -59,7 +59,7 @@ export default function AdminTeam() {
         <p className="mt-1 text-sm text-gray-400">{t("adTeam.subtitle")}</p>
       </header>
 
-      {msg && <div className="rounded-lg bg-safeword-green/10 px-4 py-3 text-sm text-safeword-green">{msg}</div>}
+      {msg && <div className="rounded-lg bg-wordlock-green/10 px-4 py-3 text-sm text-wordlock-green">{msg}</div>}
 
       <form onSubmit={submit} className="card space-y-4">
         <div className="flex flex-wrap items-end gap-3">

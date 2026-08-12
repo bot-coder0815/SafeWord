@@ -121,7 +121,7 @@ async def guild_permissions(guild_id: int, request: Request):
 
 @router.get("/data-request")
 async def data_request_summary(request: Request):
-    """Show which personal data SafeWord stores for the logged-in user."""
+    """Show which personal data WordLock stores for the logged-in user."""
     user = await auth.current_user(request)
     db = get_db(request)
     uid = user["discord_id"]
@@ -179,7 +179,7 @@ async def get_guild_config(guild_id: int, request: Request):
     db = get_db(request)
     server = await db.get_server(guild_id)
     if not server:
-        raise HTTPException(status_code=404, detail="SafeWord is not on this server")
+        raise HTTPException(status_code=404, detail="WordLock is not on this server")
     return server
 
 

@@ -8,9 +8,9 @@ import { useI18n } from "@/lib/i18n";
 
 const LEVEL_TONES: Record<string, string> = {
   info: "bg-blurple/15 text-blurple",
-  warning: "bg-safeword-yellow/15 text-safeword-yellow",
-  error: "bg-safeword-red/15 text-safeword-red",
-  critical: "bg-safeword-pink/20 text-safeword-pink",
+  warning: "bg-wordlock-yellow/15 text-wordlock-yellow",
+  error: "bg-wordlock-red/15 text-wordlock-red",
+  critical: "bg-wordlock-pink/20 text-wordlock-pink",
 };
 
 const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {

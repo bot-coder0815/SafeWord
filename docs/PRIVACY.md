@@ -1,6 +1,6 @@
-# Datenschutz (SafeWord)
+# Datenschutz (WordLock)
 
-SafeWord ist als datenschutzfreundlicher Moderation-Bot konzipiert. Diese Seite
+WordLock ist als datenschutzfreundlicher Moderation-Bot konzipiert. Diese Seite
 dokumentiert, welche Daten verarbeitet werden und wie sie gelöscht werden
 können. Sie dient als Grundlage für die Discord-Verifizierung
 (Privacy Policy URL) und für DSGVO-Anfragen.
@@ -52,7 +52,7 @@ können. Sie dient als Grundlage für die Discord-Verifizierung
 **Zweck:** Hochgeladene Profilbilder der Server-Admins speichern und
 Änderungen für die Moderation (Reset/Override) nachvollziehen.
 
-## Was SafeWord NICHT tut
+## Was WordLock NICHT tut
 
 - Es zeichnet keine Gespräche ohne Grund auf (nur gefilterte Nachrichten).
 - Es gibt **keine Daten an Dritte** weiter.
@@ -89,7 +89,7 @@ DELETE FROM warnings  WHERE guild_id = <guild_id>;
 
 ### Löschung eines Servers (Server entfernen / Bot entfernen)
 
-Beim Entfernen des Bots aus einem Server markiert SafeWord den Server als
+Beim Entfernen des Bots aus einem Server markiert WordLock den Server als
 `removed`. Für eine vollständige Löschung:
 
 ```sql

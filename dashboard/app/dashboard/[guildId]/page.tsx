@@ -54,10 +54,10 @@ export default function GuildOverview() {
       </header>
 
       {config.status === "disabled" && (
-        <div className="rounded-xl border border-safeword-red/40 bg-safeword-red/10 p-5">
+        <div className="rounded-xl border border-wordlock-red/40 bg-wordlock-red/10 p-5">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm text-safeword-red">{t("security.disabledBanner")}</p>
-            <button onClick={reEnable} className="btn-primary !bg-safeword-green">
+            <p className="text-sm text-wordlock-red">{t("security.disabledBanner")}</p>
+            <button onClick={reEnable} className="btn-primary !bg-wordlock-green">
               <Power className="h-4 w-4" /> {t("security.reEnable")}
             </button>
           </div>

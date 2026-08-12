@@ -1,4 +1,4 @@
-"""SafeWord bot / API version."""
+"""WordLock bot / API version."""
 
 __version__ = "1.0.0"
-VERSION_NAME = "SafeWord"
+VERSION_NAME = "WordLock"

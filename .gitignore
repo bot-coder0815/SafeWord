@@ -24,7 +24,7 @@ pgdata/
 
 # Offline-Bundle (Images sind riesig)
 transfer/*.tar.gz
-safeword-images/
+wordlock-images/
 
 # OS / editor
 .DS_Store

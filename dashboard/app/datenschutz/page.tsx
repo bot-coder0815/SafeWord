@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — SafeWord",
-  description: "Privacy policy for SafeWord.",
+  title: "Privacy Policy — WordLock",
+  description: "Privacy policy for WordLock.",
 };
 
 export default function DatenschutzPage() {
@@ -19,7 +19,7 @@ export default function DatenschutzPage() {
           <h2 className="text-lg font-semibold text-white">1. Responsible party</h2>
           <p className="mt-3">
             The party responsible for data processing within the meaning of the GDPR (General Data
-            Protection Regulation) is the owner of SafeWord. Contact details can be found in the{" "}
+            Protection Regulation) is the owner of WordLock. Contact details can be found in the{" "}
             <Link href="/impressum" className="text-blurple transition-colors hover:text-blurple/80">
               imprint
             </Link>
@@ -40,7 +40,7 @@ export default function DatenschutzPage() {
         <div className="card">
           <h2 className="text-lg font-semibold text-white">3. Signing in via Discord (OAuth)</h2>
           <p className="mt-3">
-            SafeWord uses Discord&apos;s OAuth login for authentication. Discord provides your public
+            WordLock uses Discord&apos;s OAuth login for authentication. Discord provides your public
             user ID, username, and avatar. This data is used exclusively for authentication and for
             managing your servers in the dashboard. Discord data is only stored to the extent
             required for the dashboard to function.
@@ -69,7 +69,7 @@ export default function DatenschutzPage() {
         <div className="card">
           <h2 className="text-lg font-semibold text-white">6. Server and message data</h2>
           <p className="mt-3">
-            SafeWord processes message content exclusively to perform moderation functions (e.g.
+            WordLock processes message content exclusively to perform moderation functions (e.g.
             automatic word filtering) on the Discord servers where the bot is enabled. The data
             stays in the server operator&apos;s own database and is never shared with third parties.
           </p>

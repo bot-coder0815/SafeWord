@@ -1,4 +1,4 @@
-"""Generate SafeWord PWA app icons (PNG) with a shield/rounded look."""
+"""Generate WordLock PWA app icons (PNG) with a shield/rounded look."""
 
 from __future__ import annotations
 

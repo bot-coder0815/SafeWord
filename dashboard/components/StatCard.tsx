@@ -11,9 +11,9 @@ export function StatCard({
 }) {
   const tones: Record<string, string> = {
     default: "text-blurple bg-blurple/10",
-    green: "text-safeword-green bg-safeword-green/10",
-    red: "text-safeword-red bg-safeword-red/10",
-    yellow: "text-safeword-yellow bg-safeword-yellow/10",
+    green: "text-wordlock-green bg-wordlock-green/10",
+    red: "text-wordlock-red bg-wordlock-red/10",
+    yellow: "text-wordlock-yellow bg-wordlock-yellow/10",
   };
   return (
     <div className="card flex items-center gap-4">

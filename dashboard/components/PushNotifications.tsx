@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { urlSafeBase64ToUint8Array, useI18n } from "@/lib/i18n";
 
-const PUSH_KEY = "safeword_push";
+const PUSH_KEY = "wordlock_push";
 
 export function PushNotifications() {
   const { t } = useI18n();
@@ -125,7 +125,7 @@ export function PushNotifications() {
         disabled={busy}
         className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition ${
           enabled
-            ? "text-safeword-green hover:bg-white/5"
+            ? "text-wordlock-green hover:bg-white/5"
             : "text-gray-400 hover:bg-white/5 hover:text-gray-200"
         }`}
       >
@@ -152,8 +152,8 @@ export function PushNotifications() {
         <div
           className={`mx-3 mb-1 rounded-lg px-3 py-2 text-xs ${
             msg === t("push.enabled") || msg === t("push.unsubscribed") || msg === t("push.testSent")
-              ? "bg-safeword-green/10 text-safeword-green"
-              : "bg-safeword-red/10 text-safeword-red"
+              ? "bg-wordlock-green/10 text-wordlock-green"
+              : "bg-wordlock-red/10 text-wordlock-red"
           }`}
         >
           {msg}

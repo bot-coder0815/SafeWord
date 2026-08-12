@@ -1,4 +1,4 @@
-"""SafeWord filter engine.
+"""WordLock filter engine.
 
 The engine detects bad words even when the sender tries to evade the filter.
 

@@ -47,7 +47,7 @@ export function Sidebar({
       <div className="flex items-center gap-2 px-5 py-5">
         <Shield className="h-8 w-8 text-blurple" />
         <div>
-          <div className="text-sm font-bold text-white">SafeWord</div>
+          <div className="text-sm font-bold text-white">WordLock</div>
           <div className="text-[11px] text-gray-500">{title}</div>
         </div>
       </div>
