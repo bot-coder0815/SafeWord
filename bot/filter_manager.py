@@ -2,13 +2,21 @@
 
 from __future__ import annotations
 
+import os
 import threading
+import time
 from typing import Dict, List, Optional
 
 from .database import Database
 from .filter_engine import FilterEngine, WordEntry
 
 ACTIONS = ("delete", "warn", "timeout", "log")
+
+# How long a compiled filter stays cached before it is rebuilt from the
+# database. The dashboard writes changes directly to the DB, so a short TTL
+# makes those edits reach the live bot within a few seconds without needing
+# an explicit reload signal.
+CACHE_TTL_SECONDS = float(os.environ.get("FILTER_CACHE_TTL", "15"))
 
 
 class FilterManager:
@@ -17,6 +25,7 @@ class FilterManager:
     def __init__(self, db: Database):
         self.db = db
         self._cache: Dict[int, FilterEngine] = {}
+        self._cache_time: Dict[int, float] = {}
         self._lock = threading.RLock()
 
     async def build(self, guild_id: int) -> FilterEngine:
@@ -53,10 +62,11 @@ class FilterManager:
         with self._lock:
             return self._cache.get(guild_id)
 
-    async def get_or_load(self, guild_id: int) -> FilterEngine:
+    async def get_or_load(self, guild_id: int, ttl: float = CACHE_TTL_SECONDS) -> FilterEngine:
         with self._lock:
             engine = self._cache.get(guild_id)
-        if engine is not None:
+            fresh = engine is not None and (time.monotonic() - self._cache_time.get(guild_id, 0)) < ttl
+        if fresh:
             return engine
         engine = await self.build(guild_id)
         self.store(guild_id, engine)
@@ -65,6 +75,7 @@ class FilterManager:
     def store(self, guild_id: int, engine: FilterEngine) -> None:
         with self._lock:
             self._cache[guild_id] = engine
+            self._cache_time[guild_id] = time.monotonic()
 
     async def rebuild(self, guild_id: int) -> FilterEngine:
         engine = await self.build(guild_id)
