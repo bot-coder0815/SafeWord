@@ -74,7 +74,7 @@ export default function StatusPage() {
   const [latency, setLatency] = useState<number | null>(null);
   const [history, setHistory] = useState<number[]>([]);
   const [now, setNow] = useState(() => Date.now());
-  const [downSince, setDownSince] = useState<Record<string, number>>({});
+  const [localSince, setLocalSince] = useState<Record<string, number>>({});
   const historyRef = useRef<number[]>([]);
 
   const tick = useCallback(() => setNow(Date.now()), []);
@@ -92,6 +92,21 @@ export default function StatusPage() {
     },
     [],
   );
+
+  const serverSince = useMemo(() => {
+    const out: Record<string, number> = {};
+    for (const key of ["api", "database", "bot"] as ServiceKey[]) {
+      const iso = data?.downtime?.[key]?.down_since;
+      if (iso) {
+        const ts = new Date(iso).getTime();
+        if (!Number.isNaN(ts)) out[key] = ts;
+      }
+    }
+    return out;
+  }, [data]);
+
+  const downSinceFor = (key: ServiceKey): number | null =>
+    serverSince[key] ?? localSince[key] ?? null;
 
   const fetchStatus = useCallback(async () => {
     const start = performance.now();
@@ -113,11 +128,12 @@ export default function StatusPage() {
       historyRef.current = arr;
       setHistory(arr);
     }
-    setDownSince((prev) => {
+    setLocalSince((prev) => {
       const next: Record<string, number> = { ...prev };
       for (const key of ["api", "database", "bot"] as ServiceKey[]) {
         const ok = isServiceOk(key, body);
-        if (ok) delete next[key];
+        const hasServer = body?.downtime?.[key]?.down_since != null;
+        if (ok || hasServer) delete next[key];
         else if (!next[key]) next[key] = Date.now();
       }
       return next;
@@ -230,7 +246,7 @@ export default function StatusPage() {
                       <span className="text-wordlock-red">
                         {t("status.serviceDown", {
                           service: label,
-                          time: formatUptime((now - (downSince[key] ?? now)) / 1000),
+                          time: formatUptime((now - (downSinceFor(key) ?? now)) / 1000),
                         })}
                       </span>
                     )}

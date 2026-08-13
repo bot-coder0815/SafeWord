@@ -279,6 +279,13 @@ CREATE TABLE IF NOT EXISTS monitor_settings (
 INSERT INTO monitor_settings (id, muted)
 VALUES (1, FALSE)
 ON CONFLICT (id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS service_downtime (
+    service        TEXT PRIMARY KEY,
+    down_since     TIMESTAMPTZ,
+    last_notified  TIMESTAMPTZ,
+    updated_at     TIMESTAMPTZ DEFAULT now()
+);
 """
 
 
@@ -894,6 +901,36 @@ class Database:
             "   ELSE to_timestamp($2) END, "
             "updated_at = now() "
             "WHERE id = 1",
+            down_since,
+            last_notified,
+        )
+
+    async def get_service_downtime(self) -> dict:
+        rows = await self._fetch("SELECT * FROM service_downtime")
+        return {
+            r["service"]: {
+                "down_since": r["down_since"].isoformat() if r["down_since"] else None,
+                "last_notified": r["last_notified"].isoformat()
+                if r["last_notified"]
+                else None,
+            }
+            for r in rows
+        }
+
+    async def set_service_downtime(
+        self, service: str, down_since: Optional[float], last_notified: Optional[float]
+    ) -> None:
+        await self._execute(
+            "INSERT INTO service_downtime (service, down_since, last_notified, updated_at) "
+            "VALUES ($1, CASE WHEN $2::float IS NULL THEN NULL ELSE to_timestamp($2) END, "
+            "   CASE WHEN $3::float IS NULL THEN NULL ELSE to_timestamp($3) END, now()) "
+            "ON CONFLICT (service) DO UPDATE SET "
+            "   down_since = CASE WHEN EXCLUDED.down_since IS NULL THEN NULL "
+            "      ELSE EXCLUDED.down_since END, "
+            "   last_notified = CASE WHEN EXCLUDED.last_notified IS NULL THEN NULL "
+            "      ELSE EXCLUDED.last_notified END, "
+            "   updated_at = now()",
+            service,
             down_since,
             last_notified,
         )

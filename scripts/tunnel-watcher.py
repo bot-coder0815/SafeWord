@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """tunnel-watcher: propagiert die aktuelle trycloudflare-URL ins Git-Repo
-und überwacht gleichzeitig API/Backend + Bot-Heartbeat.
+und überwacht gleichzeitig alle WordLock-Dienste (API, Datenbank, Bot).
 
 Ausfall-Überwachung:
-  - API wird per HTTP-Healthcheck geprüft, der Bot über bot_heartbeat.
-  - Ist eines von beiden länger als DOWN_THRESHOLD (Default 5 min) down,
+  - API wird per HTTP-Healthcheck geprüft, die Datenbank per SQL-Query und
+    der Bot über bot_heartbeat.
+  - Ist einer der Dienste länger als DOWN_THRESHOLD (Default 5 min) down,
     wird eine Web-Push-Nachricht an alle Admin-Subscriptions geschickt.
+  - Der Ausfall-Zustand wird pro Dienst in der Tabelle `service_downtime`
+    persistiert, sodass alle Clients (Status-Seite) denselben Zeitpunkt sehen.
   - Während der Ausfall anhält, wird alle RESEND_INTERVAL (Default 30 min)
     erneut gepusht.
   - Über die API (POST /api/admin/monitor/mute) kann der aktuelle Ausfall
@@ -137,7 +140,7 @@ async def url_loop() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Downtime monitoring + push
+# Downtime monitoring + push (per service: api, database, bot)
 # ---------------------------------------------------------------------------
 
 
@@ -154,12 +157,24 @@ async def api_is_healthy() -> bool:
         return False
 
 
+async def db_is_healthy(pool: asyncpg.Pool) -> bool:
+    try:
+        async with pool.acquire() as conn:
+            await conn.fetchval("SELECT 1")
+        return True
+    except Exception:
+        return False
+
+
 async def bot_is_healthy(pool: asyncpg.Pool) -> bool:
     try:
         row = await pool.fetchval("SELECT EXTRACT(EPOCH FROM last_seen) FROM bot_heartbeat WHERE id = 1")
     except Exception:
         return False
     return bool(row is not None and (_now() - float(row)) < HEARTBEAT_MAX_AGE)
+
+
+SERVICES = ("api", "database", "bot")
 
 
 async def load_settings(pool: asyncpg.Pool) -> dict:
@@ -176,27 +191,56 @@ async def load_settings(pool: asyncpg.Pool) -> dict:
     }
 
 
-async def save_settings(pool: asyncpg.Pool, down_since: float | None, last_notified: float | None) -> None:
+async def ensure_service_downtime_table(pool: asyncpg.Pool) -> None:
     await pool.execute(
-        "UPDATE monitor_settings SET down_since = CASE WHEN $1::float IS NULL "
-        "THEN NULL ELSE to_timestamp($1) END, "
-        "last_notified = CASE WHEN $2::float IS NULL THEN NULL ELSE to_timestamp($2) END, "
-        "updated_at = now() WHERE id = 1",
+        "CREATE TABLE IF NOT EXISTS service_downtime ("
+        " service TEXT PRIMARY KEY,"
+        " down_since TIMESTAMPTZ,"
+        " last_notified TIMESTAMPTZ,"
+        " updated_at TIMESTAMPTZ DEFAULT now())"
+    )
+    await pool.execute(
+        "INSERT INTO service_downtime (service) VALUES ('api'),('database'),('bot') "
+        "ON CONFLICT (service) DO NOTHING"
+    )
+
+
+async def load_service_states(pool: asyncpg.Pool) -> dict:
+    rows = await pool.fetch("SELECT service, down_since, last_notified FROM service_downtime")
+    out: dict = {}
+    for r in rows:
+        out[r["service"]] = {
+            "down_since": r["down_since"].timestamp() if r["down_since"] else None,
+            "last_notified": r["last_notified"].timestamp() if r["last_notified"] else None,
+        }
+    return out
+
+
+async def save_service_state(
+    pool: asyncpg.Pool, service: str, down_since: float | None, last_notified: float | None
+) -> None:
+    await pool.execute(
+        "INSERT INTO service_downtime (service, down_since, last_notified, updated_at) "
+        "VALUES ($1, CASE WHEN $2::float IS NULL THEN NULL ELSE to_timestamp($2) END, "
+        "CASE WHEN $3::float IS NULL THEN NULL ELSE to_timestamp($3) END, now()) "
+        "ON CONFLICT (service) DO UPDATE SET "
+        "down_since = CASE WHEN EXCLUDED.down_since IS NULL THEN NULL "
+        "ELSE EXCLUDED.down_since END, "
+        "last_notified = CASE WHEN EXCLUDED.last_notified IS NULL THEN NULL "
+        "ELSE EXCLUDED.last_notified END, "
+        "updated_at = now()",
+        service,
         down_since,
         last_notified,
     )
 
 
-def _describe_outage(api_ok: bool, bot_ok: bool) -> str:
-    parts = []
-    if not api_ok:
-        parts.append("Backend")
-    if not bot_ok:
-        parts.append("Bot")
-    return " + ".join(parts)
+def _describe_outage(down: list[str]) -> str:
+    names = {"api": "API", "database": "Datenbank", "bot": "Bot"}
+    return " + ".join(names.get(s, s) for s in down)
 
 
-async def send_push(pool: asyncpg.Pool, down_since: float) -> None:
+async def send_push(pool: asyncpg.Pool, down: list[str], down_since: float) -> None:
     if not push_configured():
         log.warning("VAPID not configured — skipping push")
         return
@@ -220,7 +264,7 @@ async def send_push(pool: asyncpg.Pool, down_since: float) -> None:
     minutes = max(1, duration // 60)
     payload = {
         "title": "⚠️ WordLock Ausfall",
-        "body": f"Backend/Bot sind seit ~{minutes} Min. nicht erreichbar.",
+        "body": f"{_describe_outage(down)} sind seit ~{minutes} Min. nicht erreichbar.",
         "icon": "/icon-192.png",
         "badge": "/icon-192.png",
         "url": "/admin",
@@ -265,36 +309,45 @@ async def monitor_loop(pool: asyncpg.Pool) -> None:
         RESEND_INTERVAL,
         CHECK_INTERVAL,
     )
+    await ensure_service_downtime_table(pool)
     while True:
         try:
-            api_ok = await api_is_healthy()
-            bot_ok = await bot_is_healthy(pool)
             settings = await load_settings(pool)
+            states = await load_service_states(pool)
             now = _now()
 
-            down = not (api_ok and bot_ok)
-            if down:
-                if settings["down_since"] is None:
-                    log.warning("Outage started: %s down", _describe_outage(api_ok, bot_ok))
-                    await save_settings(pool, now, None)
-                elif not settings["muted"]:
-                    age = now - settings["down_since"]
-                    last = settings["last_notified"]
-                    if (
-                        age >= DOWN_THRESHOLD
-                        and (last is None or (now - last) >= RESEND_INTERVAL)
-                    ):
-                        await send_push(pool, settings["down_since"])
-                        last = now
-                    await save_settings(pool, settings["down_since"], last)
-            else:
-                if settings["down_since"] is not None:
-                    log.info("System healthy again — outage ended, mute cleared.")
-                await save_settings(pool, None, None)
-                if settings["muted"]:
-                    await pool.execute(
-                        "UPDATE monitor_settings SET muted = FALSE, updated_at = now() WHERE id = 1"
-                    )
+            checks = {
+                "api": await api_is_healthy(),
+                "database": await db_is_healthy(pool),
+                "bot": await bot_is_healthy(pool),
+            }
+            down: list[str] = [s for s in SERVICES if not checks[s]]
+
+            for service in SERVICES:
+                state = states.get(service, {})
+                if checks[service]:
+                    if state.get("down_since") is not None:
+                        log.info("Service '%s' healthy again — outage ended.", service)
+                    await save_service_state(pool, service, None, None)
+                else:
+                    if state.get("down_since") is None:
+                        log.warning("Outage started: %s down", service)
+                        await save_service_state(pool, service, now, None)
+                    elif not settings["muted"]:
+                        age = now - state["down_since"]
+                        last = state.get("last_notified")
+                        if (
+                            age >= DOWN_THRESHOLD
+                            and (last is None or (now - last) >= RESEND_INTERVAL)
+                        ):
+                            await send_push(pool, down, state["down_since"])
+                            last = now
+                        await save_service_state(pool, service, state["down_since"], last)
+
+            if not down and settings.get("muted"):
+                await pool.execute(
+                    "UPDATE monitor_settings SET muted = FALSE, updated_at = now() WHERE id = 1"
+                )
         except Exception:
             log.exception("Monitor iteration failed")
         await asyncio.sleep(CHECK_INTERVAL)

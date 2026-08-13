@@ -230,6 +230,7 @@ export interface PublicStatus {
   version: string;
   started_at: string | null;
   status: { api: string; database: string; bot: string };
+  downtime: Record<string, { down_since: string | null; last_notified: string | null }>;
   stats: {
     active_servers: number;
     servers: number;

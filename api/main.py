@@ -166,6 +166,7 @@ async def api_status(request: Request) -> dict:
             "database": database,
             "bot": bot,
         },
+        "downtime": await db.get_service_downtime(),
         "stats": {
             "active_servers": await db.active_server_count(),
             "servers": await db.server_count(),
