@@ -240,6 +240,14 @@ def _describe_outage(down: list[str]) -> str:
     return " + ".join(names.get(s, s) for s in down)
 
 
+def _whitelist_ids() -> set[int]:
+    return {
+        int(i)
+        for i in os.environ.get("ADMIN_WHITELIST_IDS", "").split(",")
+        if i.strip()
+    }
+
+
 async def send_push(pool: asyncpg.Pool, down: list[str], down_since: float) -> None:
     if not push_configured():
         log.warning("VAPID not configured — skipping push")
@@ -254,7 +262,9 @@ async def send_push(pool: asyncpg.Pool, down: list[str], down_since: float) -> N
     rows = await pool.fetch(
         "SELECT ps.id, ps.endpoint, ps.keys FROM push_subscriptions ps "
         "JOIN users u ON u.discord_id = ps.user_id "
-        "WHERE u.role IN ('owner', 'developer', 'moderator')"
+        "WHERE u.role IN ('owner', 'developer', 'moderator') "
+        "OR u.discord_id = ANY($1::bigint[])",
+        list(_whitelist_ids()),
     )
     if not rows:
         log.info("No admin push subscriptions — nothing to send")

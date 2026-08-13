@@ -779,7 +779,22 @@ class Database:
         )
 
     async def admin_push_subscriptions(self) -> List[dict]:
-        """All push subscriptions belonging to WordLock staff (owner/developer/moderator)."""
+        """All push subscriptions belonging to WordLock staff.
+
+        Staff = users whose stored role is owner/developer/moderator OR whose
+        Discord ID is in the ADMIN_WHITELIST_IDS env (same logic as auth).
+        """
+        import os
+
+        whitelist = {int(i) for i in os.environ.get("ADMIN_WHITELIST_IDS", "").split(",") if i.strip()}
+        if whitelist:
+            return await self._fetch(
+                "SELECT ps.* FROM push_subscriptions ps "
+                "JOIN users u ON u.discord_id = ps.user_id "
+                "WHERE u.role IN ('owner', 'developer', 'moderator') "
+                "OR u.discord_id = ANY($1::bigint[])",
+                list(whitelist),
+            )
         return await self._fetch(
             "SELECT ps.* FROM push_subscriptions ps "
             "JOIN users u ON u.discord_id = ps.user_id "
