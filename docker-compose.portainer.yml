@@ -5,13 +5,13 @@ services:
     container_name: wordlock-db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: wordlock
-      POSTGRES_PASSWORD: wordlock
-      POSTGRES_DB: wordlock
+      POSTGRES_USER: safeword
+      POSTGRES_PASSWORD: safeword
+      POSTGRES_DB: safeword
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U wordlock"]
+      test: ["CMD-SHELL", "pg_isready -U safeword"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -22,7 +22,7 @@ services:
     container_name: wordlock-api
     restart: unless-stopped
     environment: &common
-      DATABASE_URL: postgresql://wordlock:wordlock@db:5432/wordlock
+      DATABASE_URL: postgresql://safeword:safeword@db:5432/safeword
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       BOT_OWNER_IDS: ${BOT_OWNER_IDS}
       DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID}
@@ -73,7 +73,7 @@ services:
     restart: unless-stopped
     environment:
       GITHUB_TOKEN: ${GITHUB_TOKEN}
-      REPO_URL: ${REPO_URL}
+      REPO_URL: ${REPO_URL:-https://github.com/bot-coder0815/WordLock.git}
       REPO_BRANCH: main
       REPO_FILE: config/instance-url.json
     volumes:

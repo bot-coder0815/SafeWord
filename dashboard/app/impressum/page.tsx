@@ -20,23 +20,23 @@ export default function ImpressumPage() {
           <p className="mt-3">
             WordLock – Official moderation bot
             <br />
-            Owner: <em>[Discord username]</em>
+            Owner: DevCoder
             <br />
-            Contact email: <em>[your email]</em>
+            Contact email: devcodermc@gmail.com
           </p>
         </div>
 
         <div className="card">
           <h2 className="text-lg font-semibold text-white">Contact</h2>
           <p className="mt-3">
-            Email: <em>[your email]</em>
+            Email: devcodermc@gmail.com
           </p>
         </div>
 
         <div className="card">
           <h2 className="text-lg font-semibold text-white">Responsible for content</h2>
           <p className="mt-3">
-            <em>[Discord username]</em>
+            DevCoder
           </p>
         </div>
 
