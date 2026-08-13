@@ -21,6 +21,7 @@ import { Sidebar, type SidebarItem } from "@/components/Sidebar";
 import { api, ApiError } from "@/lib/api";
 import type { Me } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
+import { BackendStatus } from "@/components/BackendStatus";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -123,7 +124,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
           {roleBadge}
         </div>
-        <div className="p-4 lg:p-10">{children}</div>
+        <div className="p-4 lg:p-10">
+          <div className="mb-6">
+            <BackendStatus />
+          </div>
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Shield, Plus, Loader2, Users, ShieldCheck, Ban } from "lucide-react";
 import { api, ApiError } from "@/lib/api";
 import type { Me } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
+import { BackendStatus } from "@/components/BackendStatus";
 
 const ADMIN_ROLES = ["owner", "developer", "moderator"];
 
@@ -110,6 +111,10 @@ export default function DashboardHome() {
           {t("dash.maintenance")}
         </div>
       )}
+
+      <div className="mb-6">
+        <BackendStatus />
+      </div>
 
       {me.admin_guilds.length === 0 && (
         <div className="card text-center text-gray-400">{t("dash.noServers")}</div>

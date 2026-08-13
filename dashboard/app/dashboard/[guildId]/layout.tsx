@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { Sidebar, type SidebarItem } from "@/components/Sidebar";
 import { useI18n } from "@/lib/i18n";
+import { BackendStatus } from "@/components/BackendStatus";
 
 export default function GuildLayout({ children }: { children: React.ReactNode }) {
   const params = useParams();
@@ -49,7 +50,12 @@ export default function GuildLayout({ children }: { children: React.ReactNode })
             <ArrowLeft className="h-3 w-3" /> {t("guild.allServers")}
           </Link>
         </div>
-        <div className="p-4 lg:p-10">{children}</div>
+        <div className="p-4 lg:p-10">
+          <div className="mb-6">
+            <BackendStatus />
+          </div>
+          {children}
+        </div>
       </div>
     </div>
   );

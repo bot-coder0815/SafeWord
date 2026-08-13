@@ -85,6 +85,10 @@ const de = {
   "dash.inviteBot": "Bot einladen",
   "dash.missingAdminPerm": "Admin-Berechtigung fehlt",
 
+  // backend availability banner
+  "backend.unreachable": "Das Backend ist gerade nicht erreichbar.",
+  "backend.restarting": "Es startet gerade nach einem Neustart hoch. Dies kann noch 2–5 Minuten dauern, bis es wieder verfügbar ist.",
+
   // guild navigation
   "guild.sidebarTitle": "Server Dashboard",
   "guild.allServers": "Alle Server",
@@ -432,6 +436,10 @@ const en: Record<string, string> = {
   "dash.notInstalled": "Not installed yet ({count})",
   "dash.openDashboard": "Open dashboard →",
   "dash.inviteBot": "Invite bot",
+
+  // backend availability banner
+  "backend.unreachable": "The backend is currently unreachable.",
+  "backend.restarting": "It is still starting up after a restart. This can take 2–5 minutes until it is available again.",
   "dash.missingAdminPerm": "Admin permission missing",
 
   // guild navigation
