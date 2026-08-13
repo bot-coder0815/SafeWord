@@ -80,6 +80,7 @@ class WordLockBot(commands.Bot):
             log.exception("App command error in %s", interaction.command)
 
         self.loop.create_task(self._presence_loop())
+        self.loop.create_task(self._heartbeat_loop())
         self.loop.create_task(self._announce_loop())
         self.loop.create_task(message_events._perms_loop())
         await self.tree.sync()
@@ -98,6 +99,16 @@ class WordLockBot(commands.Bot):
             except Exception:
                 log.exception("Could not update presence")
             await asyncio.sleep(600)
+
+    async def _heartbeat_loop(self) -> None:
+        """Report bot liveness to the API database."""
+        await self.wait_until_ready()
+        while not self.is_closed():
+            try:
+                await self.db.update_heartbeat()
+            except Exception:
+                log.exception("Could not update heartbeat")
+            await asyncio.sleep(30)
 
     async def _announce_loop(self) -> None:
         """Post new updates (announced in the admin panel) to every active server."""

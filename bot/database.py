@@ -164,6 +164,12 @@ CREATE TABLE IF NOT EXISTS standard_word_overrides (
     created_at  TIMESTAMPTZ DEFAULT now(),
     PRIMARY KEY (guild_id, word)
 );
+CREATE TABLE IF NOT EXISTS bot_heartbeat (
+    id        INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    last_seen TIMESTAMPTZ DEFAULT now()
+);
+INSERT INTO bot_heartbeat (id, last_seen) VALUES (1, now())
+ON CONFLICT (id) DO NOTHING;
 """
 
 
@@ -194,6 +200,12 @@ class Database:
 
     async def fetchval(self, query: str, *args: Any) -> Any:
         return await self._pool.fetchval(query, *args)
+
+    async def update_heartbeat(self) -> None:
+        await self.execute(
+            "INSERT INTO bot_heartbeat (id, last_seen) VALUES (1, now()) "
+            "ON CONFLICT (id) DO UPDATE SET last_seen = now()"
+        )
 
     # ------------------------------------------------------------------
     # Servers / config

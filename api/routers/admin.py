@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
@@ -33,6 +34,19 @@ def get_db(request: Request) -> Database:
 @router.get("/overview")
 async def overview(request: Request, _user=Depends(auth.require_admin)):
     db = get_db(request)
+    database = "connected"
+    try:
+        async with db._pool.acquire() as conn:
+            await conn.fetchval("SELECT 1")
+    except Exception:
+        database = "unreachable"
+
+    bot = "offline"
+    last_hb = await db.last_heartbeat()
+    if last_hb:
+        age = time.time() - last_hb
+        bot = "online" if age < 120 else "offline"
+
     return {
         "servers": await db.server_count(),
         "active_servers": await db.active_server_count(),
@@ -45,9 +59,9 @@ async def overview(request: Request, _user=Depends(auth.require_admin)):
         "started_at": getattr(request.app.state, "started_at", None),
         "last_updates": await db.list_updates(5),
         "status": {
-            "bot": "online",
+            "bot": bot,
             "api": "online",
-            "database": "connected",
+            "database": database,
         },
     }
 

@@ -205,6 +205,13 @@ CREATE TABLE IF NOT EXISTS standard_word_overrides (
     created_at  TIMESTAMPTZ DEFAULT now(),
     PRIMARY KEY (guild_id, word)
 );
+
+CREATE TABLE IF NOT EXISTS bot_heartbeat (
+    id        INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    last_seen TIMESTAMPTZ DEFAULT now()
+);
+INSERT INTO bot_heartbeat (id, last_seen) VALUES (1, now())
+ON CONFLICT (id) DO NOTHING;
 """
 
 
@@ -773,3 +780,17 @@ class Database:
             "DELETE FROM team_members WHERE id = $1", member_id
         )
         return res.endswith(" 1")
+
+    # -- heartbeat ---------------------------------------------------------
+
+    async def update_heartbeat(self) -> None:
+        await self._execute(
+            "INSERT INTO bot_heartbeat (id, last_seen) VALUES (1, now()) "
+            "ON CONFLICT (id) DO UPDATE SET last_seen = now()"
+        )
+
+    async def last_heartbeat(self) -> Optional[float]:
+        row = await self._fetchrow(
+            "SELECT EXTRACT(EPOCH FROM last_seen)::float AS ts FROM bot_heartbeat WHERE id = 1"
+        )
+        return row["ts"] if row else None
