@@ -226,6 +226,20 @@ export interface TeamMember {
   updated_at: string;
 }
 
+export interface PublicStatus {
+  version: string;
+  started_at: string | null;
+  status: { api: string; database: string; bot: string };
+  stats: {
+    active_servers: number;
+    servers: number;
+    active_users: number;
+    violations_today: number;
+    violations_total: number;
+  };
+  maintenance: boolean;
+}
+
 export interface Incident {
   id: number;
   guild_id: string;

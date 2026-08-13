@@ -140,8 +140,38 @@ async def health(request: Request) -> dict:
 
 @app.get("/api/status")
 async def api_status(request: Request) -> dict:
+    import time as _time
+
+    db: Database = request.app.state.db
+    started_at = getattr(request.app.state, "started_at", None)
+    database = "unreachable"
+    try:
+        async with db._pool.acquire() as conn:
+            await conn.fetchval("SELECT 1")
+        database = "connected"
+    except Exception:
+        pass
+
+    bot = "offline"
+    last_hb = await db.last_heartbeat()
+    if last_hb:
+        age = _time.time() - last_hb
+        bot = "online" if age < 120 else "offline"
+
     return {
         "version": __version__,
-        "started_at": getattr(request.app.state, "started_at", None),
-        "maintenance": False,
+        "started_at": started_at,
+        "status": {
+            "api": "online",
+            "database": database,
+            "bot": bot,
+        },
+        "stats": {
+            "active_servers": await db.active_server_count(),
+            "servers": await db.server_count(),
+            "active_users": await db.active_users(),
+            "violations_today": await db.violations_today(),
+            "violations_total": await db.violations_total(),
+        },
+        "maintenance": await db.maintenance_mode(),
     }

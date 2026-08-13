@@ -26,6 +26,7 @@ pgdata/
 transfer/*.tar.gz
 wordlock-images/
 build/*.tar.gz
+builds/*.tar
 
 # OS / editor
 .DS_Store
