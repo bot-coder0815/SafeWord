@@ -74,22 +74,33 @@ export default function StatusPage() {
   const [latency, setLatency] = useState<number | null>(null);
   const [history, setHistory] = useState<number[]>([]);
   const [now, setNow] = useState(() => Date.now());
+  const [downSince, setDownSince] = useState<Record<string, number>>({});
   const historyRef = useRef<number[]>([]);
 
   const tick = useCallback(() => setNow(Date.now()), []);
   useEffect(() => {
     tick();
-    const id = setInterval(tick, POLL_MS);
+    const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [tick]);
 
+  const isServiceOk = useCallback(
+    (key: ServiceKey, body: PublicStatus | null) => {
+      if (!body) return false;
+      if (key === "database") return body.status.database === "connected";
+      return body.status[key] === "online";
+    },
+    [],
+  );
+
   const fetchStatus = useCallback(async () => {
     const start = performance.now();
+    let body: PublicStatus | null = null;
     try {
       const res = await fetch("/api/status", { cache: "no-store" });
       const elapsed = Math.round(performance.now() - start);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const body: PublicStatus = await res.json();
+      body = await res.json();
       setData(body);
       setOnline(true);
       setLatency(elapsed);
@@ -102,7 +113,16 @@ export default function StatusPage() {
       historyRef.current = arr;
       setHistory(arr);
     }
-  }, []);
+    setDownSince((prev) => {
+      const next: Record<string, number> = { ...prev };
+      for (const key of ["api", "database", "bot"] as ServiceKey[]) {
+        const ok = isServiceOk(key, body);
+        if (ok) delete next[key];
+        else if (!next[key]) next[key] = Date.now();
+      }
+      return next;
+    });
+  }, [isServiceOk]);
 
   useEffect(() => {
     fetchStatus();
@@ -128,10 +148,7 @@ export default function StatusPage() {
     ? Math.round((history.filter(Boolean).length / history.length) * 100)
     : 100;
 
-  const statusDot = (key: ServiceKey) => {
-    if (key === "database") return data?.status.database === "connected";
-    return data?.status[key] === "online";
-  };
+  const statusDot = (key: ServiceKey) => isServiceOk(key, data);
 
   const activeServers = useCountUp(data?.stats.active_servers ?? 0);
   const activeUsers = useCountUp(data?.stats.active_users ?? 0);
@@ -207,9 +224,16 @@ export default function StatusPage() {
                   <div className="truncate text-sm font-medium text-gray-300">{label}</div>
                   <div className="flex items-center gap-1.5 text-xs">
                     <span className={`h-2 w-2 rounded-full ${ok ? "bg-wordlock-green" : "bg-wordlock-red"}`} />
-                    <span className={ok ? "text-wordlock-green" : "text-wordlock-red"}>
-                      {ok ? t("status.operational") : t("status.down")}
-                    </span>
+                    {ok ? (
+                      <span className="text-wordlock-green">{t("status.operational")}</span>
+                    ) : (
+                      <span className="text-wordlock-red">
+                        {t("status.serviceDown", {
+                          service: label,
+                          time: formatUptime((now - (downSince[key] ?? now)) / 1000),
+                        })}
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
