@@ -117,17 +117,17 @@ export default function StatusPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       body = await res.json();
       setData(body);
-      setOnline(true);
       setLatency(elapsed);
-      const arr = [...historyRef.current, 1].slice(-HISTORY_MAX);
-      historyRef.current = arr;
-      setHistory(arr);
     } catch {
-      setOnline(false);
-      const arr = [...historyRef.current, 0].slice(-HISTORY_MAX);
-      historyRef.current = arr;
-      setHistory(arr);
+      body = null;
     }
+    const allOk = body
+      ? ["api", "database", "bot"].every((k) => isServiceOk(k as ServiceKey, body))
+      : false;
+    setOnline(allOk);
+    const arr = [...historyRef.current, allOk ? 1 : 0].slice(-HISTORY_MAX);
+    historyRef.current = arr;
+    setHistory(arr);
     setLocalSince((prev) => {
       const next: Record<string, number> = { ...prev };
       for (const key of ["api", "database", "bot"] as ServiceKey[]) {

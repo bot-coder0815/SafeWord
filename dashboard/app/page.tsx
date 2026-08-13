@@ -93,7 +93,20 @@ export default function LandingPage() {
   useEffect(() => {
     loginUrl().then(setUrl).catch(() => setUrl(""));
     api<TeamMember[]>("/api/team").then(setTeam).catch(() => {});
-    api<PublicStatus>("/api/status").then(setStatus).catch(() => {});
+
+    let cancelled = false;
+    const load = () =>
+      api<PublicStatus>("/api/status")
+        .then((s) => {
+          if (!cancelled) setStatus(s);
+        })
+        .catch(() => {});
+    load();
+    const id = setInterval(load, 5000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
   }, []);
 
   useEffect(() => {
@@ -115,7 +128,12 @@ export default function LandingPage() {
 
   const roots = buildTree(team).get(null) ?? [];
   const allOperational =
-    status?.status.database === "connected" && status?.status.bot === "online";
+    status != null &&
+    status.status.database === "connected" &&
+    status.status.bot === "online" &&
+    !Object.values(status.downtime ?? {}).some(
+      (d) => d.down_since != null,
+    );
 
   const menuItems = [
     {
