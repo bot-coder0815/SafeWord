@@ -103,7 +103,6 @@ async def server_action(
     if "status" in updates and updates["status"] not in (
         "active",
         "disabled",
-        "removed",
         "maintenance",
     ):
         raise HTTPException(status_code=400, detail="Invalid status")
@@ -216,7 +215,7 @@ async def remove_bot(guild_id: int, request: Request, _user=Depends(auth.require
             status_code=502,
             detail=f"Discord API error {resp.status_code}: {resp.text[:200]}",
         )
-    await db.update_server(guild_id, status="removed")
+    await db.delete_server(guild_id)
     await db.add_log("admin", f"Bot removed from server {guild_id}", "info")
     return {"ok": True, "guild_id": guild_id}
 

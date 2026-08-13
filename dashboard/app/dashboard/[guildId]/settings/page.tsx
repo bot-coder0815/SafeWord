@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Save } from "lucide-react";
+import { Save, ShieldBan, ShieldOff } from "lucide-react";
 import { api } from "@/lib/api";
 import type { ServerConfig } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
@@ -47,6 +47,10 @@ export default function GuildSettings() {
         action_log: cfg.action_log,
         bypass_roles: asArray(cfg.bypass_roles),
         bypass_users: asArray(cfg.bypass_users),
+        anti_spam_enabled: cfg.anti_spam_enabled,
+        anti_nuke_enabled: cfg.anti_nuke_enabled,
+        anti_spam_config: cfg.anti_spam_config,
+        anti_nuke_config: cfg.anti_nuke_config,
       }),
     });
     setSaved(true);
@@ -210,6 +214,316 @@ export default function GuildSettings() {
             <p className="text-xs text-gray-500">{t("settings.bypassHint")}</p>
           </div>
         </div>
+      </div>
+
+      <div className="card">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold text-white">{t("settings.antiSpamTitle")}</h2>
+            <p className="mt-1 text-sm text-gray-400">{t("settings.antiSpamDesc")}</p>
+          </div>
+          <button
+            onClick={() => setCfg({ ...cfg, anti_spam_enabled: !cfg.anti_spam_enabled })}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold ${
+              cfg.anti_spam_enabled
+                ? "bg-wordlock-green/20 text-wordlock-green"
+                : "bg-white/10 text-gray-300"
+            }`}
+          >
+            <ShieldBan className="h-4 w-4" />
+            {cfg.anti_spam_enabled ? t("common.disable") : t("common.enable")}
+          </button>
+        </div>
+        {cfg.anti_spam_enabled ? (
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <label className="label">{t("settings.antiSpamAction")}</label>
+              <select
+                className="input"
+                value={cfg.anti_spam_config.action}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      action: e.target.value as typeof cfg.anti_spam_config.action,
+                    },
+                  })
+                }
+              >
+                <option value="delete">{t("settings.antiSpamActionDelete")}</option>
+                <option value="warn">{t("settings.antiSpamActionWarn")}</option>
+                <option value="timeout">{t("settings.antiSpamActionTimeout")}</option>
+                <option value="kick">{t("settings.antiSpamActionKick")}</option>
+                <option value="ban">{t("settings.antiSpamActionBan")}</option>
+              </select>
+            </div>
+            <div>
+              <label className="label">{t("settings.antiSpamRateLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_spam_config.rate_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      rate_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiSpamRateWindow")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_spam_config.rate_window}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      rate_window: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiSpamMentionLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_spam_config.mention_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      mention_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiSpamLinkLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_spam_config.link_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      link_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiSpamEmojiLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_spam_config.emoji_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      emoji_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiSpamWebhookLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_spam_config.webhook_rate_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_spam_config: {
+                      ...cfg.anti_spam_config,
+                      webhook_rate_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+          </div>
+        ) : (
+          <p className="py-4 text-center text-sm text-gray-500">{t("settings.antiSpamOffHint")}</p>
+        )}
+      </div>
+
+      <div className="card">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-semibold text-white">{t("settings.antiNukeTitle")}</h2>
+            <p className="mt-1 text-sm text-gray-400">{t("settings.antiNukeDesc")}</p>
+          </div>
+          <button
+            onClick={() => setCfg({ ...cfg, anti_nuke_enabled: !cfg.anti_nuke_enabled })}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold ${
+              cfg.anti_nuke_enabled
+                ? "bg-wordlock-red/20 text-wordlock-red"
+                : "bg-white/10 text-gray-300"
+            }`}
+          >
+            <ShieldOff className="h-4 w-4" />
+            {cfg.anti_nuke_enabled ? t("common.disable") : t("common.enable")}
+          </button>
+        </div>
+        {cfg.anti_nuke_enabled ? (
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <label className="label">{t("settings.antiNukeAction")}</label>
+              <select
+                className="input"
+                value={cfg.anti_nuke_config.action}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      action: e.target.value as typeof cfg.anti_nuke_config.action,
+                    },
+                  })
+                }
+              >
+                <option value="timeout">{t("settings.antiNukeActionTimeout")}</option>
+                <option value="kick">{t("settings.antiNukeActionKick")}</option>
+                <option value="ban">{t("settings.antiNukeActionBan")}</option>
+              </select>
+            </div>
+            <div>
+              <label className="label">{t("settings.antiNukeChannelLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_nuke_config.channel_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      channel_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiNukeWindow")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_nuke_config.channel_window}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      channel_window: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiNukeRoleLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_nuke_config.role_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      role_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiNukeBanLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_nuke_config.ban_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      ban_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiNukeKickLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_nuke_config.kick_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      kick_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <label className="label">{t("settings.antiNukeWebhookLimit")}</label>
+              <input
+                className="input"
+                type="number"
+                min={1}
+                value={cfg.anti_nuke_config.webhook_limit}
+                onChange={(e) =>
+                  setCfg({
+                    ...cfg,
+                    anti_nuke_config: {
+                      ...cfg.anti_nuke_config,
+                      webhook_limit: Number(e.target.value),
+                    },
+                  })
+                }
+              />
+            </div>
+          </div>
+        ) : (
+          <p className="py-4 text-center text-sm text-gray-500">{t("settings.antiNukeOffHint")}</p>
+        )}
       </div>
 
       <div className="flex justify-end">

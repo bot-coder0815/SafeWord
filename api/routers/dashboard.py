@@ -11,7 +11,12 @@ import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 
 from .. import auth
-from ..database import Database
+from ..database import (
+    DEFAULT_ANTI_NUKE_CONFIG,
+    DEFAULT_ANTI_SPAM_CONFIG,
+    Database,
+    merge_anti_config,
+)
 
 router = APIRouter(prefix="/api", tags=["dashboard"])
 
@@ -180,6 +185,12 @@ async def get_guild_config(guild_id: int, request: Request):
     server = await db.get_server(guild_id)
     if not server:
         raise HTTPException(status_code=404, detail="WordLock is not on this server")
+    server["anti_spam_config"] = merge_anti_config(
+        server.get("anti_spam_config"), DEFAULT_ANTI_SPAM_CONFIG
+    )
+    server["anti_nuke_config"] = merge_anti_config(
+        server.get("anti_nuke_config"), DEFAULT_ANTI_NUKE_CONFIG
+    )
     return server
 
 
@@ -221,6 +232,8 @@ async def update_guild_config(guild_id: int, payload: dict, request: Request):
         "action_warn", "action_timeout", "action_log", "timeout_minutes",
         "default_lists", "bypass_roles", "bypass_users",
         "std_word_action",
+        "anti_spam_enabled", "anti_nuke_enabled",
+        "anti_spam_config", "anti_nuke_config",
     }
     fields = {k: v for k, v in payload.items() if k in allowed}
     if not fields:
@@ -231,6 +244,37 @@ async def update_guild_config(guild_id: int, payload: dict, request: Request):
         fields["log_channel_id"] = None
     if "timeout_minutes" in fields:
         fields["timeout_minutes"] = int(fields["timeout_minutes"] or 0)
+
+    def _num(value, name: str, default: int) -> int:
+        try:
+            return max(1, int(value))
+        except (TypeError, ValueError):
+            return int(default)
+
+    if "anti_spam_config" in fields:
+        cfg = merge_anti_config(fields["anti_spam_config"], DEFAULT_ANTI_SPAM_CONFIG)
+        if cfg["action"] not in ("delete", "warn", "timeout", "kick", "ban"):
+            cfg["action"] = DEFAULT_ANTI_SPAM_CONFIG["action"]
+        for k in ("rate_limit", "rate_window", "mention_limit", "mention_window",
+                  "link_limit", "link_window", "emoji_limit", "emoji_window",
+                  "webhook_rate_limit", "webhook_window"):
+            cfg[k] = _num(cfg.get(k), k, DEFAULT_ANTI_SPAM_CONFIG[k])
+        cfg["caps_ratio"] = min(1.0, max(0.0, float(cfg.get("caps_ratio", 0.8))))
+        cfg["caps_min_len"] = max(1, int(cfg.get("caps_min_len", 8) or 8))
+        fields["anti_spam_config"] = cfg
+    if "anti_nuke_config" in fields:
+        cfg = merge_anti_config(fields["anti_nuke_config"], DEFAULT_ANTI_NUKE_CONFIG)
+        if cfg["action"] not in ("timeout", "kick", "ban"):
+            cfg["action"] = DEFAULT_ANTI_NUKE_CONFIG["action"]
+        for k in ("channel_limit", "channel_window", "role_limit", "role_window",
+                  "kick_limit", "kick_window", "ban_limit", "ban_window",
+                  "webhook_limit", "webhook_window"):
+            cfg[k] = _num(cfg.get(k), k, DEFAULT_ANTI_NUKE_CONFIG[k])
+        fields["anti_nuke_config"] = cfg
+    for flag in ("anti_spam_enabled", "anti_nuke_enabled"):
+        if flag in fields:
+            fields[flag] = bool(fields[flag])
+
     await db.update_server(guild_id, **fields)
     return await db.get_server(guild_id)
 

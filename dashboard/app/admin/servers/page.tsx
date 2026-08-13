@@ -10,7 +10,6 @@ const STATUS_TONES: Record<string, string> = {
   active: "bg-wordlock-green/15 text-wordlock-green",
   disabled: "bg-wordlock-red/15 text-wordlock-red",
   maintenance: "bg-wordlock-yellow/15 text-wordlock-yellow",
-  removed: "bg-white/5 text-gray-400",
 };
 
 type InviteInfo = { url: string; channel: string | null; expires_at: string };

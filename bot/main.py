@@ -15,6 +15,8 @@ from .version import __version__
 
 log = logging.getLogger("wordlock.bot")
 
+ACTIVITY_URL = os.environ.get("BOT_ACTIVITY_URL", "wordlockbot.vercel.app")
+
 
 class WordLockBot(commands.Bot):
     def __init__(self) -> None:
@@ -29,7 +31,7 @@ class WordLockBot(commands.Bot):
             intents=intents,
             help_command=None,
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name="wordlockbot.vercel.app"
+                type=discord.ActivityType.watching, name=ACTIVITY_URL
             ),
         )
         self.version = __version__
@@ -45,6 +47,7 @@ class WordLockBot(commands.Bot):
         from .commands.filter_commands import FilterCommands
         from .commands.settings_commands import SettingsCommands
         from .events.message_events import MessageEvents
+        from .events.protection import ProtectionEvents
         from .events.security import DISABLED_MSG, SecurityEvents
 
         await self.add_cog(FilterCommands(self))
@@ -52,6 +55,7 @@ class WordLockBot(commands.Bot):
         message_events = MessageEvents(self)
         await self.add_cog(message_events)
         await self.add_cog(SecurityEvents(self))
+        await self.add_cog(ProtectionEvents(self))
 
         @self.tree.error
         async def on_app_command_error(
@@ -87,13 +91,13 @@ class WordLockBot(commands.Bot):
         log.info("Commands synced")
 
     async def _presence_loop(self) -> None:
-        """Keep the activity set to 'wordlockbot.vercel.app' at all times."""
+        """Keep the activity set to ACTIVITY_URL at all times."""
         await self.wait_until_ready()
         while not self.is_closed():
             try:
                 await self.change_presence(
                     activity=discord.Activity(
-                        type=discord.ActivityType.watching, name="wordlockbot.vercel.app"
+                        type=discord.ActivityType.watching, name=ACTIVITY_URL
                     )
                 )
             except Exception:
@@ -247,7 +251,7 @@ class WordLockBot(commands.Bot):
         )
         await self.change_presence(
             activity=discord.Activity(
-                type=discord.ActivityType.watching, name="wordlockbot.vercel.app"
+                type=discord.ActivityType.watching, name=ACTIVITY_URL
             )
         )
         for guild in self.guilds:

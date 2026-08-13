@@ -200,13 +200,14 @@ def admin_guilds_for(user: dict, guilds: list[dict], known: dict[int, dict]) -> 
         if (g.get("permissions") or 0) & MANAGE_GUILD:
             gid = int(g["id"])
             known_g = known.get(gid)
+            bot_present = known_g is not None and known_g.get("status") != "removed"
             out.append(
                 {
                     "id": str(gid),
                     "name": g.get("name"),
                     "icon": g.get("icon"),
-                    "member_count": known_g.get("member_count", 0) if known_g else 0,
-                    "bot_in_server": known_g is not None,
+                    "member_count": known_g.get("member_count", 0) if bot_present else 0,
+                    "bot_in_server": bot_present,
                     "bot_status": (known_g or {}).get("status", "invite"),
                     "bot_has_admin": bool((known_g or {}).get("admin_ok", True)),
                 }

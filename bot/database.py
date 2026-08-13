@@ -8,6 +8,54 @@ from typing import Any, Dict, List, Optional
 
 import asyncpg
 
+DEFAULT_ANTI_SPAM_CONFIG: Dict[str, Any] = {
+    "rate_limit": 6,
+    "rate_window": 5,
+    "mention_limit": 4,
+    "mention_window": 5,
+    "caps_ratio": 0.8,
+    "caps_min_len": 8,
+    "link_limit": 3,
+    "link_window": 10,
+    "emoji_limit": 6,
+    "emoji_window": 5,
+    "webhook_rate_limit": 8,
+    "webhook_window": 5,
+    "action": "timeout",
+    "timeout_minutes": 60,
+}
+
+DEFAULT_ANTI_NUKE_CONFIG: Dict[str, Any] = {
+    "channel_limit": 3,
+    "channel_window": 5,
+    "role_limit": 3,
+    "role_window": 5,
+    "kick_limit": 3,
+    "kick_window": 5,
+    "ban_limit": 3,
+    "ban_window": 5,
+    "webhook_limit": 3,
+    "webhook_window": 5,
+    "action": "ban",
+}
+
+
+def merge_anti_config(db_config: Any, defaults: Dict[str, Any]) -> Dict[str, Any]:
+    """Merge a stored JSONB config (may be {}, partial, or a string) with defaults."""
+    if isinstance(db_config, str):
+        try:
+            db_config = json.loads(db_config)
+        except (ValueError, TypeError):
+            db_config = {}
+    if not isinstance(db_config, dict):
+        db_config = {}
+    merged = dict(defaults)
+    for k, v in db_config.items():
+        if v is not None:
+            merged[k] = v
+    return merged
+
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS servers (
     guild_id         BIGINT PRIMARY KEY,
@@ -30,6 +78,10 @@ CREATE TABLE IF NOT EXISTS servers (
     admin_ok         BOOLEAN DEFAULT TRUE,
     bot_version      TEXT,
     member_count     INTEGER DEFAULT 0,
+    anti_spam_enabled BOOLEAN DEFAULT FALSE,
+    anti_nuke_enabled BOOLEAN DEFAULT FALSE,
+    anti_spam_config  JSONB DEFAULT '{}'::jsonb,
+    anti_nuke_config  JSONB DEFAULT '{}'::jsonb,
     created_at       TIMESTAMPTZ DEFAULT now(),
     updated_at       TIMESTAMPTZ DEFAULT now()
 );
@@ -154,6 +206,10 @@ ALTER TABLE servers ADD COLUMN IF NOT EXISTS std_word_action TEXT DEFAULT 'delet
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS admin_ok BOOLEAN DEFAULT TRUE;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS bot_version TEXT;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS member_count INTEGER DEFAULT 0;
+ALTER TABLE servers ADD COLUMN IF NOT EXISTS anti_spam_enabled BOOLEAN DEFAULT FALSE;
+ALTER TABLE servers ADD COLUMN IF NOT EXISTS anti_nuke_enabled BOOLEAN DEFAULT FALSE;
+ALTER TABLE servers ADD COLUMN IF NOT EXISTS anti_spam_config JSONB DEFAULT '{}'::jsonb;
+ALTER TABLE servers ADD COLUMN IF NOT EXISTS anti_nuke_config JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT now();
 ALTER TABLE servers ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT now();
 CREATE TABLE IF NOT EXISTS standard_word_overrides (
@@ -227,6 +283,7 @@ class Database:
                 name = EXCLUDED.name,
                 member_count = EXCLUDED.member_count,
                 bot_version = COALESCE(EXCLUDED.bot_version, servers.bot_version),
+                status = CASE WHEN servers.status = 'removed' THEN 'active' ELSE servers.status END,
                 updated_at = now()
             """,
             guild_id,
@@ -252,6 +309,9 @@ class Database:
             *values,
             guild_id,
         )
+
+    async def delete_server(self, guild_id: int) -> None:
+        await self.execute("DELETE FROM servers WHERE guild_id = $1", guild_id)
 
     async def all_servers(self) -> List[Dict[str, Any]]:
         rows = await self.fetch("SELECT * FROM servers ORDER BY created_at ASC")

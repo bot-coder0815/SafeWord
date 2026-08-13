@@ -17,6 +17,37 @@ export interface Me {
   maintenance: boolean;
 }
 
+export interface AntiSpamConfig {
+  rate_limit: number;
+  rate_window: number;
+  mention_limit: number;
+  mention_window: number;
+  caps_ratio: number;
+  caps_min_len: number;
+  link_limit: number;
+  link_window: number;
+  emoji_limit: number;
+  emoji_window: number;
+  webhook_rate_limit: number;
+  webhook_window: number;
+  action: "delete" | "warn" | "timeout" | "kick" | "ban";
+  timeout_minutes: number;
+}
+
+export interface AntiNukeConfig {
+  channel_limit: number;
+  channel_window: number;
+  role_limit: number;
+  role_window: number;
+  kick_limit: number;
+  kick_window: number;
+  ban_limit: number;
+  ban_window: number;
+  webhook_limit: number;
+  webhook_window: number;
+  action: "timeout" | "kick" | "ban";
+}
+
 export interface ServerConfig {
   guild_id: string;
   name: string;
@@ -34,6 +65,10 @@ export interface ServerConfig {
   bypass_users: string[];
   bypass_privileged: boolean;
   std_word_action: string;
+  anti_spam_enabled: boolean;
+  anti_nuke_enabled: boolean;
+  anti_spam_config: AntiSpamConfig;
+  anti_nuke_config: AntiNukeConfig;
   bot_version: string | null;
   member_count: number;
 }

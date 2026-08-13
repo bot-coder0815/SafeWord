@@ -39,6 +39,7 @@ services:
       VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
       VAPID_SUBJECT: ${VAPID_SUBJECT}
       AVATAR_WEBHOOK_SECRET: ${AVATAR_WEBHOOK_SECRET}
+      BOT_ACTIVITY_URL: ${BOT_ACTIVITY_URL:-wordlockbot.vercel.app}
     depends_on:
       db:
         condition: service_healthy

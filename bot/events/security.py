@@ -253,5 +253,5 @@ class SecurityEvents(commands.Cog):
     async def on_guild_remove(self, guild: discord.Guild) -> None:
         # The bot is already gone; record the incident for the dashboard/owners.
         await self._handle_incident(guild, "bot_removed", disable=False)
-        await self.bot.db.update_server(guild.id, status="removed")
+        await self.bot.db.delete_server(guild.id)
         await self.bot.filters.invalidate(guild.id)

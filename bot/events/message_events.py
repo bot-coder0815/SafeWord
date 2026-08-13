@@ -59,8 +59,7 @@ class MessageEvents(commands.Cog):
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild: discord.Guild) -> None:
-        if guild_config := await self.bot.db.get_server(guild.id):
-            await self.bot.db.update_server(guild.id, status="removed")
+        await self.bot.db.delete_server(guild.id)
         await self.bot.filters.invalidate(guild.id)
         log.info("Left guild %s (%s)", guild.name, guild.id)
 

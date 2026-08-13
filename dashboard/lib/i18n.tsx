@@ -168,6 +168,40 @@ const de = {
   "settings.bypassPlaceholder": "z.B. 123456789012345678, 234567890123456789",
   "settings.bypassHint": "Du kannst die ID im Discord über „Server-Einstellungen → Rollen/Benutzer → Rechtsklick → ID kopieren“ erhalten. Alternativ `/filter bypass-add` im Discord.",
 
+  // anti-spam / anti-nuke protection
+  "settings.antiSpamTitle": "Anti-Spam",
+  "settings.antiSpamDesc":
+    "Verhindert Spam von Benutzern UND Bots/Webhooks: Nachrichten-Rate, Mention-, Caps-, Link- und Emoji-Spam sowie Bot-/Webhook-Flood.",
+  "settings.antiSpamAction": "Aktion bei Spam",
+  "settings.antiSpamActionDelete": "Löschen",
+  "settings.antiSpamActionWarn": "Verwarnen",
+  "settings.antiSpamActionTimeout": "Timeout",
+  "settings.antiSpamActionKick": "Kick",
+  "settings.antiSpamActionBan": "Ban",
+  "settings.antiSpamRateLimit": "Max. Nachrichten (pro Fenster)",
+  "settings.antiSpamRateWindow": "Fenster (Sekunden)",
+  "settings.antiSpamMentionLimit": "Max. Mentions (pro Fenster)",
+  "settings.antiSpamLinkLimit": "Max. Links pro Nachricht",
+  "settings.antiSpamEmojiLimit": "Max. Emojis pro Nachricht",
+  "settings.antiSpamWebhookLimit": "Bot/Webhook-Nachrichten (pro Fenster)",
+  "settings.antiSpamOffHint":
+    "Anti-Spam ist deaktiviert. Aktiviere es mit dem Button oben – Spam von Benutzern und Bots wird dann automatisch gestoppt.",
+  "settings.antiNukeTitle": "Anti-Nuke",
+  "settings.antiNukeDesc":
+    "Stoppt Nuke-Versuche automatisch: Massen-Kanal-/Rollen-Löschung, Massen-Kick/Ban und Webhook-Flut. Der Täter wird gestoppt, Rollen werden entzogen, Webhooks gelöscht.",
+  "settings.antiNukeAction": "Aktion bei Nuke",
+  "settings.antiNukeActionTimeout": "Timeout",
+  "settings.antiNukeActionKick": "Kick",
+  "settings.antiNukeActionBan": "Ban",
+  "settings.antiNukeChannelLimit": "Max. Kanal-Aktionen (pro Fenster)",
+  "settings.antiNukeWindow": "Fenster (Sekunden)",
+  "settings.antiNukeRoleLimit": "Max. Rollen-Aktionen (pro Fenster)",
+  "settings.antiNukeBanLimit": "Max. Bans (pro Fenster)",
+  "settings.antiNukeKickLimit": "Max. Kicks (pro Fenster)",
+  "settings.antiNukeWebhookLimit": "Max. Webhook-Erstellungen (pro Fenster)",
+  "settings.antiNukeOffHint":
+    "Anti-Nuke ist deaktiviert. Aktiviere es mit dem Button oben – Nuke-Versuche werden dann automatisch gestoppt und die Täter bestraft.",
+
   // charts
   "charts.violations": "Verstöße",
   "charts.servers": "Server",
@@ -197,6 +231,17 @@ const de = {
   "security.kind.channel_nuke": "Massenhafte Kanal-Erstellung/-Löschung (Nuke-Versuch)",
   "security.kind.bot_banned": "Bot wurde gebannt",
   "security.kind.bot_removed": "Bot wurde vom Server entfernt",
+  "security.kind.antispam_rate": "Nachrichten-Flut (Anti-Spam)",
+  "security.kind.antispam_mentions": "Mention-Spam (Anti-Spam)",
+  "security.kind.antispam_caps": "GROSSSCHREIBEN-Spam (Anti-Spam)",
+  "security.kind.antispam_links": "Link-Spam (Anti-Spam)",
+  "security.kind.antispam_emoji": "Emoji-Spam (Anti-Spam)",
+  "security.kind.antispam_webhook": "Bot-/Webhook-Nachrichten-Flut (Anti-Spam)",
+  "security.kind.antinuke_channels": "Massen-Kanal-Aktionen (Anti-Nuke)",
+  "security.kind.antinuke_roles": "Massen-Rollen-Aktionen (Anti-Nuke)",
+  "security.kind.antinuke_ban": "Massen-Ban (Anti-Nuke)",
+  "security.kind.antinuke_kick": "Massen-Kick (Anti-Nuke)",
+  "security.kind.antinuke_webhooks": "Webhook-Erstellungs-Flut (Anti-Nuke)",
 
   // push notifications
   "push.enable": "Benachrichtigungen aktivieren",
@@ -519,6 +564,40 @@ const en: Record<string, string> = {
   "settings.bypassPlaceholder": "e.g. 123456789012345678, 234567890123456789",
   "settings.bypassHint": "Get the ID in Discord via \"Server Settings → Roles/Users → Right-click → Copy ID\". Or use `/filter bypass-add` in Discord.",
 
+  // anti-spam / anti-nuke protection
+  "settings.antiSpamTitle": "Anti-Spam",
+  "settings.antiSpamDesc":
+    "Prevents spam from users AND bots/webhooks: message rate, mention, caps, link and emoji spam as well as bot/webhook floods.",
+  "settings.antiSpamAction": "Action for spam",
+  "settings.antiSpamActionDelete": "Delete",
+  "settings.antiSpamActionWarn": "Warn",
+  "settings.antiSpamActionTimeout": "Timeout",
+  "settings.antiSpamActionKick": "Kick",
+  "settings.antiSpamActionBan": "Ban",
+  "settings.antiSpamRateLimit": "Max. messages (per window)",
+  "settings.antiSpamRateWindow": "Window (seconds)",
+  "settings.antiSpamMentionLimit": "Max. mentions (per window)",
+  "settings.antiSpamLinkLimit": "Max. links per message",
+  "settings.antiSpamEmojiLimit": "Max. emojis per message",
+  "settings.antiSpamWebhookLimit": "Bot/webhook messages (per window)",
+  "settings.antiSpamOffHint":
+    "Anti-spam is disabled. Enable it with the button above – spam from users and bots will then be stopped automatically.",
+  "settings.antiNukeTitle": "Anti-Nuke",
+  "settings.antiNukeDesc":
+    "Stops nuke attempts automatically: mass channel/role deletion, mass kick/ban and webhook floods. The perpetrator is stopped, roles are stripped and webhooks are deleted.",
+  "settings.antiNukeAction": "Action for nuke",
+  "settings.antiNukeActionTimeout": "Timeout",
+  "settings.antiNukeActionKick": "Kick",
+  "settings.antiNukeActionBan": "Ban",
+  "settings.antiNukeChannelLimit": "Max. channel actions (per window)",
+  "settings.antiNukeWindow": "Window (seconds)",
+  "settings.antiNukeRoleLimit": "Max. role actions (per window)",
+  "settings.antiNukeBanLimit": "Max. bans (per window)",
+  "settings.antiNukeKickLimit": "Max. kicks (per window)",
+  "settings.antiNukeWebhookLimit": "Max. webhook creations (per window)",
+  "settings.antiNukeOffHint":
+    "Anti-nuke is disabled. Enable it with the button above – nuke attempts will then be stopped automatically and the perpetrators punished.",
+
   // charts
   "charts.violations": "Violations",
   "charts.servers": "Servers",
@@ -548,6 +627,17 @@ const en: Record<string, string> = {
   "security.kind.channel_nuke": "Mass channel creation/deletion (nuke attempt)",
   "security.kind.bot_banned": "Bot was banned",
   "security.kind.bot_removed": "Bot was removed from the server",
+  "security.kind.antispam_rate": "Message flood (anti-spam)",
+  "security.kind.antispam_mentions": "Mention spam (anti-spam)",
+  "security.kind.antispam_caps": "ALL-CAPS spam (anti-spam)",
+  "security.kind.antispam_links": "Link spam (anti-spam)",
+  "security.kind.antispam_emoji": "Emoji spam (anti-spam)",
+  "security.kind.antispam_webhook": "Bot/webhook message flood (anti-spam)",
+  "security.kind.antinuke_channels": "Mass channel actions (anti-nuke)",
+  "security.kind.antinuke_roles": "Mass role actions (anti-nuke)",
+  "security.kind.antinuke_ban": "Mass ban (anti-nuke)",
+  "security.kind.antinuke_kick": "Mass kick (anti-nuke)",
+  "security.kind.antinuke_webhooks": "Webhook creation flood (anti-nuke)",
 
   // push notifications
   "push.enable": "Enable notifications",
