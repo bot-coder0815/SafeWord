@@ -138,7 +138,7 @@ export default function AdminProfile() {
               {history.map((h) => (
                 <li key={h.id} className="py-2.5 text-sm">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-medium text-white">{t("profile.header")}</span>
+                    <span className="font-medium text-white">{t("adProf.header")}</span>
                     <span className="text-xs text-gray-500">
                       {new Date(h.created_at).toLocaleString(locale)}
                     </span>

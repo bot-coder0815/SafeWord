@@ -212,6 +212,17 @@ CREATE TABLE IF NOT EXISTS bot_heartbeat (
 );
 INSERT INTO bot_heartbeat (id, last_seen) VALUES (1, now())
 ON CONFLICT (id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS monitor_settings (
+    id              SMALLINT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
+    muted           BOOLEAN NOT NULL DEFAULT FALSE,
+    down_since      TIMESTAMPTZ,
+    last_notified   TIMESTAMPTZ,
+    updated_at      TIMESTAMPTZ DEFAULT now()
+);
+INSERT INTO monitor_settings (id, muted)
+VALUES (1, FALSE)
+ON CONFLICT (id) DO NOTHING;
 """
 
 
@@ -794,3 +805,30 @@ class Database:
             "SELECT EXTRACT(EPOCH FROM last_seen)::float AS ts FROM bot_heartbeat WHERE id = 1"
         )
         return row["ts"] if row else None
+
+    # -- monitor settings (downtime alerts) --------------------------------
+
+    async def get_monitor_settings(self) -> dict:
+        row = await self._fetchrow("SELECT * FROM monitor_settings WHERE id = 1")
+        return row or {"muted": False, "down_since": None, "last_notified": None}
+
+    async def set_monitor_muted(self, muted: bool) -> None:
+        await self._execute(
+            "UPDATE monitor_settings SET muted = $1, updated_at = now() WHERE id = 1",
+            muted,
+        )
+
+    async def set_monitor_state(
+        self, down_since: Optional[float], last_notified: Optional[float]
+    ) -> None:
+        await self._execute(
+            "UPDATE monitor_settings "
+            "SET down_since = CASE WHEN $1::float IS NULL THEN NULL "
+            "   ELSE to_timestamp($1) END, "
+            "last_notified = CASE WHEN $2::float IS NULL THEN NULL "
+            "   ELSE to_timestamp($2) END, "
+            "updated_at = now() "
+            "WHERE id = 1",
+            down_since,
+            last_notified,
+        )

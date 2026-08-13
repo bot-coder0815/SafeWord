@@ -95,7 +95,6 @@ const de = {
   "nav.overview": "Übersicht",
   "nav.filters": "Filter",
   "nav.settings": "Einstellungen",
-  "nav.profile": "Bot Profil",
   "nav.security": "Sicherheit",
 
   // guild overview
@@ -168,20 +167,6 @@ const de = {
   "settings.bypassUsers": "Bypass-Benutzer (IDs, kommasepariert)",
   "settings.bypassPlaceholder": "z.B. 123456789012345678, 234567890123456789",
   "settings.bypassHint": "Du kannst die ID im Discord über „Server-Einstellungen → Rollen/Benutzer → Rechtsklick → ID kopieren“ erhalten. Alternativ `/filter bypass-add` im Discord.",
-
-  // guild profile
-  "profile.title": "Bot Profilbild",
-  "profile.subtitle": "Das Profilbild des Bots für diesen Server anpassen.",
-  "profile.info":
-    "Discord erlaubt pro Bot nur ein globales Profilbild. Dein Upload überschreibt das aktuelle Bild für alle Server (der letzte Upload gewinnt). Bei anstößigen Bildern können die WordLock-Admins es im Adminbereich ändern oder zurücksetzen. Die Activity bleibt immer „Made by DevCoder“.",
-  "profile.header": "Profilbild",
-  "profile.upload": "Profilbild hochladen",
-  "profile.noImage": "Kein Bild",
-  "profile.lastChanged": "Zuletzt geändert am {date}",
-  "profile.readError": "Datei konnte nicht gelesen werden",
-  "profile.pickError": "Bitte ein Bild wählen (PNG/JPG/GIF/WebP).",
-  "profile.saved": "Profilbild gespeichert ✓",
-  "profile.saveBtn": "Profilbild speichern",
 
   // charts
   "charts.violations": "Verstöße",
@@ -263,6 +248,18 @@ const de = {
   "adminOv.totalViolations": "Verstöße gesamt",
   "adminOv.errorLogs": "Fehler in Logs",
 
+  // downtime monitor
+  "monitor.title": "Ausfall-Überwachung",
+  "monitor.ok": "Alles in Ordnung",
+  "monitor.down": "Ausfall aktiv",
+  "monitor.downSince": "Seit {date}",
+  "monitor.api": "Backend",
+  "monitor.bot": "Bot",
+  "monitor.muted": "Für diesen Ausfall stummgeschaltet",
+  "monitor.mute": "Für diesen Ausfall stummschalten",
+  "monitor.unmute": "Stummschaltung aufheben",
+  "monitor.muteDesc":
+    "Solange der Ausfall anhält, werden keine weiteren Ausfall-Pushes gesendet. Nach der Erholung greift die Meldung beim nächsten Ausfall wieder.",
   // admin servers
   "adServ.title": "Server Verwaltung",
   "adServ.subtitle": "{count} verbundene Discord-Server",
@@ -348,6 +345,7 @@ const de = {
   "adUpd.maintenanceBadge": "Wartung",
 
   // admin profile
+  "adProf.header": "Profilbild",
   "adProf.title": "Bot Profilbild (Admin)",
   "adProf.subtitle": "Moderieren & zurücksetzen, wenn Server-Admins unpassende Bilder hochladen.",
   "adProf.reset": "Auf Standard zurücksetzen",
@@ -448,7 +446,6 @@ const en: Record<string, string> = {
   "nav.overview": "Overview",
   "nav.filters": "Filters",
   "nav.settings": "Settings",
-  "nav.profile": "Bot profile",
   "nav.security": "Security",
 
   // guild overview
@@ -521,20 +518,6 @@ const en: Record<string, string> = {
   "settings.bypassUsers": "Bypass users (IDs, comma-separated)",
   "settings.bypassPlaceholder": "e.g. 123456789012345678, 234567890123456789",
   "settings.bypassHint": "Get the ID in Discord via \"Server Settings → Roles/Users → Right-click → Copy ID\". Or use `/filter bypass-add` in Discord.",
-
-  // guild profile
-  "profile.title": "Bot profile picture",
-  "profile.subtitle": "Customize the bot's profile picture for this server.",
-  "profile.info":
-    "Discord allows only one global profile picture per bot. Your upload overwrites the current image for all servers (last upload wins). For inappropriate images, WordLock admins can change or reset it from the admin area. The activity always stays \"Made by DevCoder\".",
-  "profile.header": "Profile picture",
-  "profile.upload": "Upload profile picture",
-  "profile.noImage": "No image",
-  "profile.lastChanged": "Last changed on {date}",
-  "profile.readError": "File could not be read",
-  "profile.pickError": "Please choose an image (PNG/JPG/GIF/WebP).",
-  "profile.saved": "Profile picture saved ✓",
-  "profile.saveBtn": "Save profile picture",
 
   // charts
   "charts.violations": "Violations",
@@ -615,6 +598,19 @@ const en: Record<string, string> = {
   "adminOv.activeServers": "Active servers",
   "adminOv.totalViolations": "Total violations",
   "adminOv.errorLogs": "Errors in logs",
+
+  // downtime monitor
+  "monitor.title": "Outage monitor",
+  "monitor.ok": "All systems operational",
+  "monitor.down": "Outage active",
+  "monitor.downSince": "Since {date}",
+  "monitor.api": "Backend",
+  "monitor.bot": "Bot",
+  "monitor.muted": "Muted for this outage",
+  "monitor.mute": "Mute for this outage",
+  "monitor.unmute": "Unmute",
+  "monitor.muteDesc":
+    "While this outage lasts, no further outage pushes are sent. After recovery, the alert applies again on the next outage.",
 
   // admin servers
   "adServ.title": "Server management",
@@ -701,6 +697,7 @@ const en: Record<string, string> = {
   "adUpd.maintenanceBadge": "Maintenance",
 
   // admin profile
+  "adProf.header": "Profile picture",
   "adProf.title": "Bot profile picture (Admin)",
   "adProf.subtitle": "Moderate & reset when server admins upload inappropriate images.",
   "adProf.reset": "Reset to default",

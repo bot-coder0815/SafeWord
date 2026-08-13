@@ -503,3 +503,48 @@ async def admin_profile_reset(request: Request, _user=Depends(auth.require_owner
     db = get_db(request)
     stored = await profile_service.apply_and_store(db, None, _user["discord_id"])
     return {"ok": True, "avatar": stored.get("avatar")}
+
+
+# ---------------------------------------------------------------------------
+# Downtime monitor (API/backend + bot) — state + mute for current outage
+# ---------------------------------------------------------------------------
+
+
+@router.get("/monitor")
+async def monitor_status(request: Request, _user=Depends(auth.require_admin)):
+    """Current downtime-monitor state (backend/bot reachability + mute)."""
+    db = get_db(request)
+    settings = await db.get_monitor_settings()
+    now = time.time()
+
+    api_ok = True
+    try:
+        async with httpx.AsyncClient(timeout=5) as client:
+            resp = await client.get("http://localhost:8000/api/health")
+            api_ok = resp.status_code == 200
+    except Exception:
+        api_ok = False
+
+    last_hb = await db.last_heartbeat()
+    bot_ok = bool(last_hb and (now - last_hb) < 120)
+
+    down_since = settings.get("down_since")
+    return {
+        "muted": settings.get("muted", False),
+        "down_since": down_since.isoformat() if down_since else None,
+        "last_notified": settings.get("last_notified").isoformat()
+        if settings.get("last_notified")
+        else None,
+        "api_ok": api_ok,
+        "bot_ok": bot_ok,
+        "down": not (api_ok and bot_ok),
+    }
+
+
+@router.post("/monitor/mute")
+async def monitor_mute(payload: dict, request: Request, _user=Depends(auth.require_admin)):
+    """Mute/unmute downtime push notifications for the current outage."""
+    db = get_db(request)
+    muted = bool(payload.get("muted"))
+    await db.set_monitor_muted(muted)
+    return {"ok": True, "muted": muted}

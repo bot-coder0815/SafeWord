@@ -107,6 +107,15 @@ export interface AdminOverview {
   status: { bot: string; api: string; database: string };
 }
 
+export interface MonitorStatus {
+  muted: boolean;
+  down_since: string | null;
+  last_notified: string | null;
+  api_ok: boolean;
+  bot_ok: boolean;
+  down: boolean;
+}
+
 export interface AdminServer {
   guild_id: string;
   name: string;

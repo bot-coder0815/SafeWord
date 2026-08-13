@@ -1,7 +1,11 @@
-FROM alpine/git:latest
+FROM python:3.12-slim
 
-COPY scripts/tunnel-watcher.sh /usr/local/bin/tunnel-watcher.sh
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN chmod +x /usr/local/bin/tunnel-watcher.sh
+COPY scripts/tunnel-watcher.py /usr/local/bin/tunnel-watcher.py
 
-ENTRYPOINT ["/usr/local/bin/tunnel-watcher.sh"]
+RUN pip install --no-cache-dir asyncpg httpx pywebpush
+
+ENTRYPOINT ["python", "/usr/local/bin/tunnel-watcher.py"]

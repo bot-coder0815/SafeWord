@@ -72,16 +72,27 @@ services:
     container_name: wordlock-tunnel-watcher
     restart: unless-stopped
     environment:
+      DATABASE_URL: postgresql://wordlock:wordlock@db:5432/wordlock
       GITHUB_TOKEN: ${GITHUB_TOKEN}
       REPO_URL: ${REPO_URL:-https://github.com/bot-coder0815/WordLock.git}
       REPO_BRANCH: main
       REPO_FILE: config/instance-url.json
+      API_HEALTH_URL: http://wordlock-api:8000/api/health
+      CHECK_INTERVAL: ${CHECK_INTERVAL:-30}
+      DOWN_THRESHOLD: ${DOWN_THRESHOLD:-300}
+      RESEND_INTERVAL: ${RESEND_INTERVAL:-1800}
+      HEARTBEAT_MAX_AGE: ${HEARTBEAT_MAX_AGE:-120}
+      VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY}
+      VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY}
+      VAPID_SUBJECT: ${VAPID_SUBJECT}
+    depends_on:
+      db:
+        condition: service_healthy
+      tunnel:
+        condition: service_started
     volumes:
       - tunnel-log:/tunnel-log:ro
       - watch-repo:/repo
-    depends_on:
-      tunnel:
-        condition: service_started
 
 volumes:
   pgdata:

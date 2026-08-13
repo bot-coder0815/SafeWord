@@ -1,19 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Server, Users, AlertTriangle, Bug, Activity, Clock, Rocket } from "lucide-react";
+import { Server, Users, AlertTriangle, Bug, Activity, Clock, Rocket, BellOff, BellRing } from "lucide-react";
 import { api } from "@/lib/api";
-import type { AdminOverview } from "@/lib/types";
+import type { AdminOverview, MonitorStatus } from "@/lib/types";
 import { StatCard } from "@/components/StatCard";
 import { useI18n } from "@/lib/i18n";
 
 export default function AdminOverview() {
   const { t, locale } = useI18n();
   const [data, setData] = useState<AdminOverview | null>(null);
+  const [monitor, setMonitor] = useState<MonitorStatus | null>(null);
+  const [muting, setMuting] = useState(false);
 
   useEffect(() => {
     api<AdminOverview>("/api/admin/overview").then(setData);
+    api<MonitorStatus>("/api/admin/monitor").then(setMonitor).catch(() => setMonitor(null));
   }, []);
+
+  const toggleMute = async () => {
+    if (!monitor) return;
+    setMuting(true);
+    try {
+      const res = await api<{ muted: boolean }>("/api/admin/monitor/mute", {
+        method: "POST",
+        body: JSON.stringify({ muted: !monitor.muted }),
+      });
+      setMonitor((m) => (m ? { ...m, muted: res.muted } : m));
+    } finally {
+      setMuting(false);
+    }
+  };
 
   if (!data) return <p className="text-gray-400">{t("adminOv.loading")}</p>;
 
@@ -52,6 +69,63 @@ export default function AdminOverview() {
       {data.maintenance_mode && (
         <div className="rounded-xl border border-wordlock-yellow/40 bg-wordlock-yellow/10 p-4 text-sm text-wordlock-yellow">
           {t("adminOv.maintenance")}
+        </div>
+      )}
+
+      {monitor && (
+        <div
+          className={`rounded-xl border p-4 ${
+            monitor.down
+              ? "border-wordlock-red/40 bg-wordlock-red/10"
+              : "border-wordlock-green/40 bg-wordlock-green/10"
+          }`}
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <BellRing className={`h-5 w-5 ${monitor.down ? "text-wordlock-red" : "text-wordlock-green"}`} />
+              <div>
+                <div className="flex items-center gap-2 font-semibold text-white">
+                  {t("monitor.title")}
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      monitor.down ? "bg-wordlock-red/20 text-red-300" : "bg-wordlock-green/20 text-wordlock-green"
+                    }`}
+                  >
+                    {monitor.down ? t("monitor.down") : t("monitor.ok")}
+                  </span>
+                </div>
+                <div className="mt-0.5 flex flex-wrap gap-x-4 gap-y-0.5 text-xs text-gray-300">
+                  <span className={monitor.api_ok ? "text-wordlock-green" : "text-red-300"}>
+                    {t("monitor.api")}: {monitor.api_ok ? "OK" : "DOWN"}
+                  </span>
+                  <span className={monitor.bot_ok ? "text-wordlock-green" : "text-red-300"}>
+                    {t("monitor.bot")}: {monitor.bot_ok ? "OK" : "DOWN"}
+                  </span>
+                  {monitor.down_since && (
+                    <span className="text-gray-400">
+                      {t("monitor.downSince", {
+                        date: new Date(monitor.down_since).toLocaleString(locale),
+                      })}
+                    </span>
+                  )}
+                  {monitor.muted && (
+                    <span className="flex items-center gap-1 text-wordlock-yellow">
+                      <BellOff className="h-3 w-3" /> {t("monitor.muted")}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={toggleMute}
+              disabled={muting || !monitor.down}
+              className={`btn-secondary ${!monitor.down ? "opacity-40" : ""}`}
+            >
+              {monitor.muted ? <BellRing className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+              {muting ? t("common.loading") : monitor.muted ? t("monitor.unmute") : t("monitor.mute")}
+            </button>
+          </div>
+          {monitor.down && <p className="mt-2 text-xs text-gray-400">{t("monitor.muteDesc")}</p>}
         </div>
       )}
 

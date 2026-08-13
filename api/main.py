@@ -15,7 +15,7 @@ from fastapi.responses import JSONResponse
 
 from . import push_service
 from .database import Database
-from .routers import admin, dashboard, profile, security, webhook
+from .routers import admin, dashboard, security, webhook
 from .version import __version__
 
 log = logging.getLogger("wordlock.api")
@@ -112,7 +112,6 @@ app.add_middleware(
 )
 
 app.include_router(dashboard.router)
-app.include_router(profile.router)
 app.include_router(admin.router)
 app.include_router(security.router)
 app.include_router(webhook.router)
