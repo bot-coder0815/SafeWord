@@ -13,10 +13,17 @@ import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
 
 from .. import auth, profile_service
-from ..database import Database
+from ..database import (
+    DEFAULT_ANTI_NUKE_CONFIG,
+    DEFAULT_ANTI_SPAM_CONFIG,
+    Database,
+    merge_anti_config,
+)
 from ..version import __version__
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
+
+WORD_ACTIONS = ["delete", "warn", "timeout", "log"]
 
 DATA_DIR = Path(os.environ.get("DATA_DIR", str(Path(__file__).resolve().parent.parent.parent / "data")))
 ROLE_LEVELS = {"moderator": 1, "developer": 2, "owner": 3}
@@ -82,12 +89,20 @@ async def server_detail(guild_id: int, request: Request, _user=Depends(auth.requ
     server = await db.get_server(guild_id)
     if not server:
         raise HTTPException(status_code=404, detail="Server not found")
+    server["anti_spam_config"] = merge_anti_config(
+        server.get("anti_spam_config"), DEFAULT_ANTI_SPAM_CONFIG
+    )
+    server["anti_nuke_config"] = merge_anti_config(
+        server.get("anti_nuke_config"), DEFAULT_ANTI_NUKE_CONFIG
+    )
     return {
         **server,
         "words": await db.get_custom_words(guild_id, enabled_only=False),
         "logs": await db.get_logs(guild_id=guild_id, limit=20),
         "violations": await db.violations_series(guild_id, 30),
         "top_words": await db.violations_top_words(guild_id, 10),
+        "incidents": await db.list_incidents(guild_id=guild_id, limit=10),
+        "violations_total": await db.violations_total(guild_id),
     }
 
 
@@ -98,7 +113,27 @@ async def server_action(
     db = get_db(request)
     if not await db.get_server(guild_id):
         raise HTTPException(status_code=404, detail="Server not found")
-    allowed = {"status", "maintenance", "bypass_privileged"}
+    allowed = {
+        "status",
+        "maintenance",
+        "bypass_privileged",
+        "language",
+        "mod_level",
+        "log_channel_id",
+        "timeout_minutes",
+        "action_delete",
+        "action_warn",
+        "action_timeout",
+        "action_log",
+        "default_lists",
+        "bypass_roles",
+        "bypass_users",
+        "std_word_action",
+        "anti_spam_enabled",
+        "anti_nuke_enabled",
+        "anti_spam_config",
+        "anti_nuke_config",
+    }
     updates = {k: v for k, v in payload.items() if k in allowed}
     if "status" in updates and updates["status"] not in (
         "active",
@@ -106,9 +141,69 @@ async def server_action(
         "maintenance",
     ):
         raise HTTPException(status_code=400, detail="Invalid status")
+    if "mod_level" in updates and updates["mod_level"] not in range(1, 6):
+        raise HTTPException(status_code=400, detail="Invalid mod_level")
+    if "anti_spam_config" in updates:
+        updates["anti_spam_config"] = merge_anti_config(
+            updates["anti_spam_config"], DEFAULT_ANTI_SPAM_CONFIG
+        )
+    if "anti_nuke_config" in updates:
+        updates["anti_nuke_config"] = merge_anti_config(
+            updates["anti_nuke_config"], DEFAULT_ANTI_NUKE_CONFIG
+        )
     if updates:
         await db.update_server(guild_id, **updates)
+        await db.add_log(
+            "admin",
+            f"Updated server {guild_id}: {', '.join(updates.keys())}",
+            "info",
+            guild_id=guild_id,
+        )
     return await db.get_server(guild_id)
+
+
+@router.get("/servers/{guild_id}/words")
+async def admin_guild_words(guild_id: int, request: Request, _user=Depends(auth.require_admin)):
+    return await get_db(request).get_custom_words(guild_id, enabled_only=False)
+
+
+@router.post("/servers/{guild_id}/words")
+async def admin_add_word(guild_id: int, payload: dict, request: Request, _user=Depends(auth.require_admin)):
+    db = get_db(request)
+    if not await db.get_server(guild_id):
+        raise HTTPException(status_code=404, detail="Server not found")
+    word = (payload.get("word") or "").strip().lower()
+    if not word or len(word) > 100:
+        raise HTTPException(status_code=400, detail="Invalid word")
+    category = payload.get("category", "custom")
+    severity = int(payload.get("severity", 3))
+    action = payload.get("action", "delete")
+    if severity not in range(1, 6):
+        raise HTTPException(status_code=400, detail="Severity must be 1-5")
+    if action not in WORD_ACTIONS:
+        raise HTTPException(status_code=400, detail="Invalid action")
+    ok = await db.add_custom_word(guild_id, word, category, severity, action)
+    if not ok:
+        raise HTTPException(status_code=400, detail="Could not add word")
+    await db.add_log("admin", f"Added word '{word}' on server {guild_id}", "info", guild_id=guild_id)
+    return {"ok": True, "word": word}
+
+
+@router.delete("/servers/{guild_id}/words/{word}")
+async def admin_delete_word(guild_id: int, word: str, request: Request, _user=Depends(auth.require_admin)):
+    db = get_db(request)
+    ok = await db.remove_custom_word(guild_id, word.lower())
+    if not ok:
+        raise HTTPException(status_code=404, detail="Word not found")
+    await db.add_log("admin", f"Removed word '{word}' on server {guild_id}", "info", guild_id=guild_id)
+    return {"ok": True}
+
+
+@router.patch("/servers/{guild_id}/words/{word}/enabled")
+async def admin_toggle_word(guild_id: int, word: str, payload: dict, request: Request, _user=Depends(auth.require_admin)):
+    enabled = bool(payload.get("enabled"))
+    await get_db(request).set_custom_word_enabled(guild_id, word.lower(), enabled)
+    return {"ok": True, "enabled": enabled}
 
 
 INVITE_TTL = timedelta(days=7)
@@ -192,6 +287,76 @@ async def generate_invite(guild_id: int, request: Request, _user=Depends(auth.re
         raise HTTPException(status_code=404, detail="Server not found")
     await db.delete_invite(guild_id)
     return await _get_or_create_invite(db, guild_id, server)
+
+
+@router.get("/servers/{guild_id}/channels")
+async def server_channels(guild_id: int, request: Request, _user=Depends(auth.require_admin)):
+    """List the server's text channels via the Discord API (for broadcasting)."""
+    token = os.environ.get("DISCORD_TOKEN")
+    if not token:
+        raise HTTPException(status_code=500, detail="DISCORD_TOKEN not configured")
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(
+            f"{auth.DISCORD_API}/guilds/{guild_id}/channels",
+            headers={"Authorization": f"Bot {token}"},
+            timeout=15,
+        )
+    if resp.status_code != 200:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Discord API error {resp.status_code}: {resp.text[:200]}",
+        )
+    channels = [
+        {
+            "id": str(c["id"]),
+            "name": c.get("name", ""),
+            "type": c.get("type", 0),
+        }
+        for c in resp.json()
+        if c.get("type") in (0, 5)
+    ]
+    return {"channels": channels}
+
+
+@router.post("/servers/{guild_id}/announce")
+async def server_announce(
+    guild_id: int, payload: dict, request: Request, _user=Depends(auth.require_admin)
+):
+    """Send a message to a server channel as the bot (admin broadcast)."""
+    db = get_db(request)
+    server = await db.get_server(guild_id)
+    if not server:
+        raise HTTPException(status_code=404, detail="Server not found")
+    message = (payload.get("message") or "").strip()
+    if not message:
+        raise HTTPException(status_code=400, detail="Message is required")
+    channel_id = payload.get("channel_id")
+    if not channel_id:
+        channel_id = server.get("log_channel_id")
+    if not channel_id:
+        raise HTTPException(status_code=400, detail="No channel selected")
+    token = os.environ.get("DISCORD_TOKEN")
+    if not token:
+        raise HTTPException(status_code=500, detail="DISCORD_TOKEN not configured")
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(
+            f"{auth.DISCORD_API}/channels/{channel_id}/messages",
+            headers={"Authorization": f"Bot {token}"},
+            json={"content": message[:2000]},
+            timeout=15,
+        )
+    if resp.status_code != 200:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Discord API error {resp.status_code}: {resp.text[:200]}",
+        )
+    await db.add_log(
+        "admin",
+        f"Broadcast to server {guild_id} (channel {channel_id})",
+        "info",
+        guild_id=guild_id,
+    )
+    return {"ok": True}
 
 
 @router.post("/servers/{guild_id}/kick")

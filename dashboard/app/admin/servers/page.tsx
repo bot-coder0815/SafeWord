@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Server, RefreshCw, UserX, Link as LinkIcon, Copy, Check } from "lucide-react";
+import Link from "next/link";
+import { Server, RefreshCw, UserX, Link as LinkIcon, Copy, Check, Search, ArrowUpRight } from "lucide-react";
 import { api } from "@/lib/api";
 import type { AdminServer } from "@/lib/types";
 import { useI18n } from "@/lib/i18n";
@@ -20,6 +21,8 @@ export default function AdminServers() {
   const [loading, setLoading] = useState(true);
   const [invites, setInvites] = useState<Record<string, InviteInfo>>({});
   const [copied, setCopied] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const reload = () => {
     setLoading(true);
@@ -27,6 +30,16 @@ export default function AdminServers() {
   };
 
   useEffect(reload, []);
+
+  const filtered = servers.filter((s) => {
+    if (filter !== "all" && s.status !== filter) return false;
+    const q = query.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      (s.name || "").toLowerCase().includes(q) ||
+      s.guild_id.includes(q)
+    );
+  });
 
   const loadInvites = async (list: AdminServer[]) => {
     const entries: [string, InviteInfo][] = [];
@@ -116,7 +129,25 @@ export default function AdminServers() {
       {loading ? (
         <p className="text-gray-400">{t("common.loading")}</p>
       ) : (
-        <div className="card overflow-x-auto">
+        <>
+          <div className="mb-4 flex flex-wrap items-center gap-3">
+            <div className="relative min-w-[220px] flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
+              <input
+                className="input pl-9"
+                placeholder={t("adServ.searchPlaceholder")}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+            <select className="input w-auto" value={filter} onChange={(e) => setFilter(e.target.value)}>
+              <option value="all">{t("adServ.filterAll")}</option>
+              <option value="active">{t("adServ.filterActive")}</option>
+              <option value="disabled">{t("adServ.filterDisabled")}</option>
+              <option value="maintenance">{t("adServ.filterMaintenance")}</option>
+            </select>
+          </div>
+          <div className="card overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-white/5 text-left text-xs uppercase tracking-wider text-gray-400">
@@ -131,12 +162,16 @@ export default function AdminServers() {
               </tr>
             </thead>
             <tbody>
-              {servers.map((s) => (
+              {filtered.map((s) => (
                 <tr key={s.guild_id} className="border-b border-white/5 last:border-0">
                   <td className="py-3">
-                    <div className="flex items-center gap-2 font-medium text-white">
+                    <Link
+                      href={`/admin/servers/${s.guild_id}`}
+                      className="group flex items-center gap-2 font-medium text-white hover:text-blurple"
+                    >
                       <Server className="h-4 w-4 text-blurple" /> {s.name || "—"}
-                    </div>
+                      <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
+                    </Link>
                   </td>
                   <td className="py-3 font-mono text-xs text-gray-400">{s.guild_id}</td>
                   <td className="py-3 text-gray-300">{s.member_count?.toLocaleString(locale)}</td>
@@ -214,7 +249,11 @@ export default function AdminServers() {
               ))}
             </tbody>
           </table>
-        </div>
+          {filtered.length === 0 && (
+            <p className="py-8 text-center text-sm text-gray-500">{t("adServ.noResults")}</p>
+          )}
+          </div>
+        </>
       )}
     </div>
   );

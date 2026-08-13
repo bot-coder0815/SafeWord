@@ -165,6 +165,24 @@ export interface AdminServer {
   updated_at: string;
 }
 
+export interface AdminServerDetail extends ServerConfig {
+  owner_id: string | null;
+  created_at: string;
+  updated_at: string;
+  words: Word[];
+  logs: LogEntry[];
+  violations: SeriesPoint[];
+  top_words: WordCount[];
+  incidents: Incident[];
+  violations_total: number;
+}
+
+export interface ServerChannel {
+  id: string;
+  name: string;
+  type: number;
+}
+
 export interface AdminStats {
   violations_series: SeriesPoint[];
   server_growth: SeriesPoint[];

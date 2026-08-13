@@ -492,7 +492,13 @@ class Database:
             )
         )
 
-    async def violations_total(self) -> int:
+    async def violations_total(self, guild_id: Optional[int] = None) -> int:
+        if guild_id:
+            return int(
+                await self._fetchval(
+                    "SELECT COUNT(*) FROM violations WHERE guild_id = $1", guild_id
+                )
+            )
         return int(await self._fetchval("SELECT COUNT(*) FROM violations"))
 
     async def violations_series(self, guild_id: Optional[int] = None, days: int = 30) -> List[dict]:
