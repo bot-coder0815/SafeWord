@@ -14,6 +14,9 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: team_8L0RAhPNLU0MeIqhqmPBvYBY
+      VERCEL_PROJECT_ID: prj_d8GZkgkHs0BwX8jsWaNrv9IOp6yG
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -33,10 +36,10 @@ jobs:
       - name: Update NEXT_PUBLIC_API_URL (production)
         working-directory: dashboard
         run: |
-          npx --yes vercel env rm NEXT_PUBLIC_API_URL production --yes --token "${{ secrets.VERCEL_TOKEN }}" || true
-          echo "${{ steps.url.outputs.url }}" | npx --yes vercel env add NEXT_PUBLIC_API_URL production --token "${{ secrets.VERCEL_TOKEN }}"
+          npx --yes vercel env rm NEXT_PUBLIC_API_URL production --yes --token "${{ secrets.VERCEL_TOKEN }}" --scope team_8L0RAhPNLU0MeIqhqmPBvYBY || true
+          echo "${{ steps.url.outputs.url }}" | npx --yes vercel env add NEXT_PUBLIC_API_URL production --token "${{ secrets.VERCEL_TOKEN }}" --scope team_8L0RAhPNLU0MeIqhqmPBvYBY
 
       - name: Deploy to production
         working-directory: dashboard
         run: |
-          npx --yes vercel deploy --prod --yes --token "${{ secrets.VERCEL_TOKEN }}"
+          npx --yes vercel deploy --prod --yes --token "${{ secrets.VERCEL_TOKEN }}" --scope team_8L0RAhPNLU0MeIqhqmPBvYBY

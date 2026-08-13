@@ -33,14 +33,14 @@ export function BackendStatus() {
   if (!unreachable) return null;
 
   return (
-    <div className="flex items-start gap-3 rounded-xl border border-wordlock-yellow/40 bg-wordlock-yellow/10 p-4 text-sm text-wordlock-yellow">
-      <WifiOff className="mt-0.5 h-5 w-5 shrink-0" />
-      <div>
-        <div className="font-semibold">{t("backend.unreachable")}</div>
-        <div className="mt-0.5 flex items-center gap-1.5 text-xs text-wordlock-yellow/80">
-          <Loader2 className="h-3 w-3 animate-spin" />
+    <div className="sticky top-0 z-50 flex items-center justify-center gap-3 border-b border-wordlock-yellow/40 bg-wordlock-yellow/15 px-4 py-3 text-sm text-wordlock-yellow backdrop-blur">
+      <WifiOff className="h-5 w-5 shrink-0" />
+      <div className="text-center">
+        <span className="font-semibold">{t("backend.unreachable")}</span>{" "}
+        <span className="inline-flex items-center gap-1.5 text-wordlock-yellow/90">
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
           {t("backend.restarting")}
-        </div>
+        </span>
       </div>
     </div>
   );

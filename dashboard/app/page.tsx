@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { api, loginUrl } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
 import { LangSwitcher } from "@/components/LangSwitcher";
+import { BackendStatus } from "@/components/BackendStatus";
 import type { TeamMember } from "@/lib/types";
 
 function buildTree(members: TeamMember[]): Map<number | null, TeamMember[]> {
@@ -101,6 +102,11 @@ export default function LandingPage() {
           )}
         </div>
       </nav>
+
+      {/* Backend status */}
+      <div className="mx-auto max-w-6xl px-6">
+        <BackendStatus />
+      </div>
 
       {/* Hero */}
       <section className="mx-auto max-w-4xl px-6 pb-24 pt-16 text-center">
