@@ -20,6 +20,17 @@ import type { PublicStatus } from "@/lib/types";
 
 const POLL_MS = 5000;
 const HISTORY_MAX = 60;
+const LOCAL_KEY = "wordlock.localSince";
+
+function readLocalSince(): Record<string, number> {
+  try {
+    const raw = window.sessionStorage.getItem(LOCAL_KEY);
+    if (raw) return JSON.parse(raw) as Record<string, number>;
+  } catch {
+    /* ignore */
+  }
+  return {};
+}
 
 type ServiceKey = "api" | "database" | "bot";
 
@@ -74,7 +85,7 @@ export default function StatusPage() {
   const [latency, setLatency] = useState<number | null>(null);
   const [history, setHistory] = useState<number[]>([]);
   const [now, setNow] = useState(() => Date.now());
-  const [localSince, setLocalSince] = useState<Record<string, number>>({});
+  const [localSince, setLocalSince] = useState<Record<string, number>>(readLocalSince);
   const historyRef = useRef<number[]>([]);
 
   const tick = useCallback(() => setNow(Date.now()), []);
@@ -83,6 +94,14 @@ export default function StatusPage() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [tick]);
+
+  useEffect(() => {
+    try {
+      window.sessionStorage.setItem(LOCAL_KEY, JSON.stringify(localSince));
+    } catch {
+      /* ignore */
+    }
+  }, [localSince]);
 
   const isServiceOk = useCallback(
     (key: ServiceKey, body: PublicStatus | null) => {
